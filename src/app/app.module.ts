@@ -8,6 +8,7 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { HttpClientModule } from '@angular/common/http';
 import { InAppBrowser } from '@ionic-native/in-app-browser'
+import { IonicStorageModule } from '@ionic/storage'
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser'
   imports: [
     BrowserModule,
     HttpClientModule,
+    IonicStorageModule.forRoot(),
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],

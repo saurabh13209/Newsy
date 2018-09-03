@@ -1,1 +1,13 @@
-<ion-nav [root]="rootPage"></ion-nav>
+<ion-menu [content]="content">
+    <ion-content>
+        <img src="http://wpuploads.appadvice.com/wp-content/uploads/2015/04/news.jpg" style="padding:0%;margin:0%;" height="25%" width="100%">
+        <button style="font-weight: bold" ion-item (click)="MAKER()">
+            Home
+        </button>
+        <button style="font-weight: bold" ion-item (click)="MAKER()">
+            Bookmark
+        </button>
+    </ion-content>
+</ion-menu>
+
+<ion-nav [root]="rootPage" #content></ion-nav>
