@@ -13,12 +13,14 @@
 
 <ion-content padding style="background:#FEFFEF">
   <ion-list *ngFor="let ele of ImageItem  ; let i=index;">
-    <ion-card class= "EachCard">
+    <ion-card class="EachCard">
       <ion-item>
         <img src="{{ele.Image}}" (click)="click_main(ele.url)">
         <div style="text-align:rightleft;">
-          <img style="height:10%;width:10%;" class="ImageMain" (click)="DeBookmark(ele.Title)"
-            src="https://www.materialui.co/materialIcons/action/bookmark_black_192x192.png">
+          <img style="height:10%;width:10%;float: left;" class="ImageMain" (click)="DeBookmark(ele.Title)" src="https://www.materialui.co/materialIcons/action/bookmark_black_192x192.png">
+          <button style="background: white;" (click)="ShareIt(ele.Title+'\nTo Read more News download Newsy.' , ele.Image , ele.Link)">
+            <img src="https://png.icons8.com/metro/1600/forward-arrow.png" style="height:10%;width:10%;">
+          </button>
         </div>
       </ion-item>
       <ion-card-content (click)="click_main(ele.Desc)">

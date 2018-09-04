@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { InAppBrowser, InAppBrowserOptions } from '@ionic-native/in-app-browser';
 import { Storage } from '@ionic/storage'
 import { HomePage } from '../home/home';
+import { SocialSharing } from '@ionic-native/social-sharing';
 
 @Component({
   selector: 'page-bookmark',
@@ -12,7 +13,7 @@ import { HomePage } from '../home/home';
 })
 export class BookmarkPage {
 
-  constructor(public menuCtrl: MenuController, public navCtrl: NavController, public http: HttpClient, public inAppBrowser: InAppBrowser, public IonicStorage: Storage) {
+  constructor(private Social: SocialSharing ,  public menuCtrl: MenuController, public navCtrl: NavController, public http: HttpClient, public inAppBrowser: InAppBrowser, public IonicStorage: Storage) {
 
   }
 
@@ -60,6 +61,10 @@ export class BookmarkPage {
     };
     this.inAppBrowser.create(link, '_Self', option).show;
   }
+
+  ShareIt(Title , Image ,     Url){
+    this.Social.shareViaWhatsApp(Title,Image,Url);
+}
 
 
   login() {

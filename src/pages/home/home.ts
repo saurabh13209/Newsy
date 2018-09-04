@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { InAppBrowser, InAppBrowserOptions } from '@ionic-native/in-app-browser';
 import { Storage } from '@ionic/storage'
 import { BookmarkPage } from '../../pages/bookmark/bookmark';
+import { SocialSharing } from '@ionic-native/social-sharing';
 
 @Component({
     selector: 'page-home',
@@ -18,7 +19,7 @@ export class HomePage {
     public COUNTRY: any = "in";
     public CAT: any = "entertainment";
 
-    constructor(private AlertCtrl: AlertController, private ActionCtrl: ActionSheetController, public menuCtrl: MenuController, public navCtrl: NavController, public http: HttpClient, public inAppBrowser: InAppBrowser, public IonicStorage: Storage) {
+    constructor(private Social:SocialSharing , private AlertCtrl: AlertController, private ActionCtrl: ActionSheetController, public menuCtrl: MenuController, public navCtrl: NavController, public http: HttpClient, public inAppBrowser: InAppBrowser, public IonicStorage: Storage) {
 
     }
 
@@ -31,6 +32,10 @@ export class HomePage {
             this.MainLink = "https://newsapi.org/v2/top-headlines?country=" + this.COUNTRY + "&category=" + this.CAT + "&apiKey=2719918152a7463492d900316ee90bf1";
             this.login();
         }
+    }
+
+    ShareIt(Title , Image ,     Url){
+        this.Social.shareViaWhatsApp(Title,Image,Url);
     }
 
     HomePageMaker() {

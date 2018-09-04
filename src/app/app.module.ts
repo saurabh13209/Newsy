@@ -10,6 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { IonicStorageModule } from '@ionic/storage';
 import { BookmarkPage } from '../pages/bookmark/bookmark' 
+import { SocialSharing } from '@ionic-native/social-sharing';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { BookmarkPage } from '../pages/bookmark/bookmark'
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
+    SocialSharing,
     InAppBrowser
   ]
 })
