@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { NavController, MenuController } from 'ionic-angular';
+import { Component, Input } from '@angular/core';
+import { NavController, MenuController, AlertController, ActionSheetController } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
 import { InAppBrowser, InAppBrowserOptions } from '@ionic-native/in-app-browser';
@@ -14,12 +14,337 @@ export class HomePage {
     public user_name: any;
     public ITEMS: any;
     public Bookmark_image: any;
+    public SearchBox: any;
+    public COUNTRY:any = "in";
+    public CAT:any = "entertainment";
 
-    constructor(public menuCtrl: MenuController, public navCtrl: NavController, public http: HttpClient, public inAppBrowser: InAppBrowser, public IonicStorage: Storage) {
+    constructor(private AlertCtrl: AlertController, private ActionCtrl: ActionSheetController, public menuCtrl: MenuController, public navCtrl: NavController, public http: HttpClient, public inAppBrowser: InAppBrowser, public IonicStorage: Storage) {
 
     }
 
+    getSearchRes(ev: any) {
+        const val = ev.target.value;
+        if (val && val.trim() != '') {
+            this.MainLink = "https://newsapi.org/v2/top-headlines?country="+this.COUNTRY+"&category="+this.CAT+"&q="+val+"&apiKey=2719918152a7463492d900316ee90bf1"
+            this.login();
+        }else{
+            this.MainLink = "https://newsapi.org/v2/top-headlines?country="+this.COUNTRY+"&category="+this.CAT+"&apiKey=2719918152a7463492d900316ee90bf1";
+            this.login();
+        }
+    }
+
     HomePageMaker() {
+    }
+
+    FilterAdder() {
+
+        let Action = this.ActionCtrl.create({
+            title: "Filters",
+            buttons: [
+                {
+                    text: 'Country',
+                    handler: () => {
+                        let A = this.AlertCtrl.create();
+                        A.setTitle("Country");
+                        A.addInput({
+                            type: 'radio',
+                            label: 'United Arab Emirates',
+                            value: 'ae',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Argentina',
+                            value: 'ar',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Austria',
+                            value: 'at',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Australia',
+                            value: 'au',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Belgium',
+                            value: 'be',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Bulgaria',
+                            value: 'bg',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Brazil',
+                            value: 'br',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Canada',
+                            value: 'ca',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Switzerland',
+                            value: 'ch',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'China',
+                            value: 'ch',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Colombia',
+                            value: 'co',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Cuba',
+                            value: 'cu',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Czechia',
+                            value: 'cz',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Germany',
+                            value: 'de',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Egypt',
+                            value: 'eg',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'France',
+                            value: 'fr',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'United Kingdom',
+                            value: 'gb',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Greece',
+                            value: 'gr',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Hong Kong',
+                            value: 'hk',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Hungary',
+                            value: 'hu',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Indonesia',
+                            value: 'id',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Ireland',
+                            value: 'ie',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Israel',
+                            value: 'il',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'India',
+                            value: 'in',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Italy',
+                            value: 'it',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Japan',
+                            value: 'jp',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Korea',
+                            value: 'kr',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Lithuania',
+                            value: 'lt',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Latvia',
+                            value: 'lv',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Morocco',
+                            value: 'ma',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Mexico',
+                            value: 'mx',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Malaysia',
+                            value: 'my',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Nigeria',
+                            value: 'ng',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Netherlands',
+                            value: 'nl',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Norway',
+                            value: 'no',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'New Zealand',
+                            value: 'nz',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Philippines',
+                            value: 'ph',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Latvia',
+                            value: 'pl',
+                            checked: false
+                        });
+                        A.addButton({
+                            text: "Save",
+                            handler: data => {
+                                console.log(data);
+                                this.COUNTRY = data;
+                                this.login();
+                            }
+                        });
+                        A.present();
+                    }
+                },
+                {
+                    text: 'category',
+                    handler: () => {
+                        let A = this.AlertCtrl.create();
+                        A.setTitle("category");
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Business',
+                            value: 'business',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Entertainment',
+                            value: 'entertainment',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'General',
+                            value: 'general',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Health',
+                            value: 'health',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Science',
+                            value: 'science',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Sports',
+                            value: 'sports',
+                            checked: false
+                        });
+                        A.addInput({
+                            type: 'radio',
+                            label: 'Technology',
+                            value: 'technology',
+                            checked: false
+                        });
+                        A.addButton({
+                            text: "Save",
+                            handler: data => {
+                                this.CAT = data;
+                                this.login();
+                            }
+                        });
+                        A.present();
+                    }
+                }
+            ]
+        });
+        Action.present();
     }
 
     BookmarkPageMaker() {
@@ -28,7 +353,7 @@ export class HomePage {
 
     Bookmark(i, ImageUrl, TitleUrl, DescUrl, LinkUrl) {
         var ele = document.getElementsByClassName("ImageMain");
-        console.log('x'+ele[i].getAttribute('src')+'x');
+        console.log('x' + ele[i].getAttribute('src') + 'x');
         if (ele[i].getAttribute('src') == " ../../assets/imgs/bookmark_white.png ") {
             ele[i].setAttribute('src', " ../../assets/imgs/bookmark_black.png ");
             this.BookmarkFunc(ImageUrl, TitleUrl, DescUrl, LinkUrl);
@@ -101,11 +426,11 @@ export class HomePage {
         this.inAppBrowser.create(link, '_Self', option).show;
     }
 
-
-
+    public MainLink:any = "https://newsapi.org/v2/top-headlines?country="+this.COUNTRY+"&category="+this.CAT+"&apiKey=2719918152a7463492d900316ee90bf1";
+        
     login() {
         let data: Observable<any>;
-        data = this.http.get('https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=2719918152a7463492d900316ee90bf1');
+        data = this.http.get(this.MainLink);
         data.subscribe(result => {
             var json_get = result.articles;
             var main_array = [];
