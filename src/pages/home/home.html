@@ -1,25 +1,23 @@
 <ion-menu [content]="content">
   <ion-content>
-      <img src="http://wpuploads.appadvice.com/wp-content/uploads/2015/04/news.jpg" style="padding:0%;margin:0%;" height="25%" width="100%">
-      <button style="font-weight: bold" ion-item (click)="HomePageMaker()">
-          Home
-      </button>
-      <button style="font-weight: bold" ion-item (click)="BookmarkPageMaker()">
-          Bookmark
-      </button>
+    <img src="http://wpuploads.appadvice.com/wp-content/uploads/2015/04/news.jpg" style="padding:0%;margin:0%;" height="25%"
+      width="100%">
+    <button style="font-weight: bold" ion-item (click)="HomePageMaker()">
+      Home
+    </button>
+    <button style="font-weight: bold" ion-item (click)="BookmarkPageMaker()">
+      Bookmark
+    </button>
   </ion-content>
 </ion-menu>
 <ion-nav #content></ion-nav>
 
 <ion-header>
-  <ion-navbar color="danger" >
+  <ion-navbar color="#212121">
     <ion-buttons>
-      <button ion-button icon-only menuToggle style="float:left; position: absolute; right: -0px;">
-          <ion-icon name="menu" style="zoom: 1.3;"></ion-icon>
+      <button ion-button icon-only menuToggle style="float:left;">
+        <ion-icon name="menu" style="zoom: 1.3;"></ion-icon>
       </button>
-      <button ion-button icon-only (click)="FilterAdder()" >
-          <ion-icon name="flag" style="zoom: 1.3;"></ion-icon>
-      </button> 
     </ion-buttons>
     <ion-title style="padding-top:1%;padding-bottom: 1%">
       Newsy
@@ -27,16 +25,21 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding style="background:#FEFFEF">
+<ion-content padding style="background: #424242;">
 
-    <ion-searchbar (ionInput)="getSearchRes($event)" ></ion-searchbar>
+  <ion-searchbar (ionInput)="getSearchRes($event)"></ion-searchbar>
 
-  <ion-list  *ngFor="let ele of ITEMS ; let i=index;">
-    <ion-card >
-      <ion-item >
+  <ion-fab bottom right>
+      <button ion-fab (click)="FilterAdder()"><ion-icon name="flag"></ion-icon></button>
+    </ion-fab>
+
+  <ion-list *ngFor="let ele of ITEMS ; let i=index;">
+    <ion-card>
+      <ion-item>
         <img src="{{ele.Image}}" (click)="click_main(ele.Link)">
         <div style="text-align:rightleft;">
-          <img style="height:10%;width:10%;" class="ImageMain" (click)="Bookmark(i , ele.Image , ele.Title , ele.Desc , ele.Link)" src=" {{ ele.BookImage }} ">
+          <img style="height:10%;width:10%;" class="ImageMain" (click)="Bookmark(i , ele.Image , ele.Title , ele.Desc , ele.Link)"
+            src=" {{ ele.BookImage }} ">
         </div>
       </ion-item>
       <ion-card-content (click)="click_main(ele.url)">
@@ -50,5 +53,5 @@
     </ion-card>
 
   </ion-list>
-  
+
 </ion-content>
