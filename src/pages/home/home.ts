@@ -15,8 +15,8 @@ export class HomePage {
     public ITEMS: any;
     public Bookmark_image: any;
     public SearchBox: any;
-    public COUNTRY:any = "in";
-    public CAT:any = "entertainment";
+    public COUNTRY: any = "in";
+    public CAT: any = "entertainment";
 
     constructor(private AlertCtrl: AlertController, private ActionCtrl: ActionSheetController, public menuCtrl: MenuController, public navCtrl: NavController, public http: HttpClient, public inAppBrowser: InAppBrowser, public IonicStorage: Storage) {
 
@@ -25,10 +25,10 @@ export class HomePage {
     getSearchRes(ev: any) {
         const val = ev.target.value;
         if (val && val.trim() != '') {
-            this.MainLink = "https://newsapi.org/v2/top-headlines?country="+this.COUNTRY+"&category="+this.CAT+"&q="+val+"&apiKey=2719918152a7463492d900316ee90bf1"
+            this.MainLink = "https://newsapi.org/v2/everything?q=" + val + "&apiKey=2719918152a7463492d900316ee90bf1"
             this.login();
-        }else{
-            this.MainLink = "https://newsapi.org/v2/top-headlines?country="+this.COUNTRY+"&category="+this.CAT+"&apiKey=2719918152a7463492d900316ee90bf1";
+        } else {
+            this.MainLink = "https://newsapi.org/v2/top-headlines?country=" + this.COUNTRY + "&category=" + this.CAT + "&apiKey=2719918152a7463492d900316ee90bf1";
             this.login();
         }
     }
@@ -279,7 +279,9 @@ export class HomePage {
                             handler: data => {
                                 console.log(data);
                                 this.COUNTRY = data;
+                                this.MainLink = "https://newsapi.org/v2/top-headlines?country=" + this.COUNTRY + "&category=" + this.CAT + "&apiKey=2719918152a7463492d900316ee90bf1";  this.login();
                                 this.login();
+                              
                             }
                         });
                         A.present();
@@ -336,7 +338,8 @@ export class HomePage {
                             text: "Save",
                             handler: data => {
                                 this.CAT = data;
-                                this.login();
+                                this.MainLink = "https://newsapi.org/v2/top-headlines?country=" + this.COUNTRY + "&category=" + this.CAT + "&apiKey=2719918152a7463492d900316ee90bf1";
+                                this.login(); 
                             }
                         });
                         A.present();
@@ -426,8 +429,8 @@ export class HomePage {
         this.inAppBrowser.create(link, '_Self', option).show;
     }
 
-    public MainLink:any = "https://newsapi.org/v2/top-headlines?country="+this.COUNTRY+"&category="+this.CAT+"&apiKey=2719918152a7463492d900316ee90bf1";
-        
+    public MainLink: any = "https://newsapi.org/v2/top-headlines?country=" + this.COUNTRY + "&category=" + this.CAT + "&apiKey=2719918152a7463492d900316ee90bf1";
+
     login() {
         let data: Observable<any>;
         data = this.http.get(this.MainLink);
