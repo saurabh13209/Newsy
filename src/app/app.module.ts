@@ -7,13 +7,15 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { HttpClientModule } from '@angular/common/http';
-import { InAppBrowser } from '@ionic-native/in-app-browser'
-import { IonicStorageModule } from '@ionic/storage'
+import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { IonicStorageModule } from '@ionic/storage';
+import { BookmarkPage } from '../pages/bookmark/bookmark' 
 
 @NgModule({
   declarations: [
     MyApp,
-    HomePage
+    HomePage,
+    BookmarkPage
   ],
   imports: [
     BrowserModule,
@@ -24,7 +26,8 @@ import { IonicStorageModule } from '@ionic/storage'
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
+    HomePage,
+    BookmarkPage
   ],
   providers: [
     StatusBar,

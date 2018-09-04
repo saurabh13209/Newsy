@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-navbar color="danger">
+    <ion-buttons start>
+      <button ion-button icon-only menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>
+      Newsy
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding style="background:#FEFFEF">
+  <ion-list *ngFor="let ele of ImageItem  ; let i=index;">
+    <ion-card class= "EachCard">
+      <ion-item>
+        <img src="{{ele.Image}}" (click)="click_main(ele.url)">
+        <div style="text-align:rightleft;">
+          <img style="height:10%;width:10%;" class="ImageMain" (click)="DeBookmark(ele.Title)"
+            src="https://www.materialui.co/materialIcons/action/bookmark_black_192x192.png">
+        </div>
+      </ion-item>
+      <ion-card-content (click)="click_main(ele.Desc)">
+        <ion-card-title>
+          {{ ele.Title }}
+        </ion-card-title>
+        <p>
+          {{ ele.Desc }}
+        </p>
+      </ion-card-content>
+    </ion-card>
+
+  </ion-list>
+
+</ion-content>

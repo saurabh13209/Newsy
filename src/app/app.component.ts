@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { HomePage } from '../pages/home/home';
 import { Storage } from '@ionic/storage'
+
 @Component({
   templateUrl: 'app.html'
 })
@@ -17,8 +18,8 @@ export class MyApp {
       splashScreen.hide();
     });
 
+
     IonicStorage.get("DATA_VAL").then((val) => {
-      console.log(val);
       if (val == null) {
         var json_main = {
           Image: [],
