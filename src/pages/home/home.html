@@ -8,7 +8,7 @@
     <button style="font-weight: bold" ion-item (click)="BookmarkPageMaker()">
       Bookmark
     </button>
-    <button style="font-weight: bold" ion-item (click)="BookmarkPageMaker()">
+    <button style="font-weight: bold" ion-item (click)="AboutPageMaker()">
       About
     </button>
   </ion-content>
@@ -31,20 +31,18 @@
 <ion-content padding style="background: #424242;">
 
   <ion-searchbar (ionInput)="getSearchRes($event)"></ion-searchbar>
-
   <ion-fab bottom right>
     <button ion-fab (click)="FilterAdder()"><ion-icon name="flag"></ion-icon></button>
   </ion-fab>
-
   <ion-list *ngFor="let ele of ITEMS ; let i=index;">
     <ion-card>
       <ion-item>
-        <img  src="{{ele.Image}}" (click)="click_main(ele.Link)">
+        <img src="{{ele.Image}}" (click)="click_main(ele.Link)">
         <div style="text-align:rightleft;">
           <img style="height:10%;width:10%;float: left;margin: 0%;" class="ImageMain" (click)="Bookmark(i , ele.Image , ele.Title , ele.Desc , ele.Link)"
             src=" {{ ele.BookImage }} ">
-          <button style="background: white;" (click)="ShareIt(ele.Title+'\nTo Read more News download Newsy.' , ele.Image , ele.Link)">
-              <img src="https://png.icons8.com/metro/1600/forward-arrow.png" style="height:10%;width:10%;">
+          <button style="background: white;" (click)="ShareIt(ele.Title+'\nTo Read more News, Download Newsy.' , ele.Image , ele.Link)">
+            <img src="https://png.icons8.com/metro/1600/forward-arrow.png" style="height:10%;width:10%;">
           </button>
         </div>
       </ion-item>

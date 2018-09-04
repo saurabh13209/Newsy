@@ -20,7 +20,7 @@ export class MyApp {
 
 
     IonicStorage.get("DATA_VAL").then((val) => {
-      if (val == null) {
+      if (val === null) {
         var json_main = {
           Image: [],
           Title: [],
@@ -30,6 +30,17 @@ export class MyApp {
          IonicStorage.set('DATA_VAL',JSON.stringify(json_main));
       }
     });
+    IonicStorage.get('Filter').then((val) =>{
+      if(val === null){
+        console.log("S");
+        var json_main = {
+          Name: [],
+          Cnt:[],
+          cat:[]
+        }
+        IonicStorage.set('Filter',JSON.stringify(json_main));
+      }
+    })
   }
 
   MAKER() {

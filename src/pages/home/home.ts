@@ -6,6 +6,7 @@ import { InAppBrowser, InAppBrowserOptions } from '@ionic-native/in-app-browser'
 import { Storage } from '@ionic/storage'
 import { BookmarkPage } from '../../pages/bookmark/bookmark';
 import { SocialSharing } from '@ionic-native/social-sharing';
+import { AboutPage } from '../about/about';
 
 @Component({
     selector: 'page-home',
@@ -34,15 +35,15 @@ export class HomePage {
         }
     }
 
-    ShareIt(Title , Image ,     Url){
+    ShareIt(Title , Image ,  Url){
         this.Social.shareViaWhatsApp(Title,Image,Url);
     }
 
-    HomePageMaker() {
+    AboutPageMaker(){
+        this.navCtrl.push(AboutPage);
     }
 
     FilterAdder() {
-
         let Action = this.ActionCtrl.create({
             title: "Filters",
             buttons: [
@@ -347,6 +348,67 @@ export class HomePage {
                                 this.login(); 
                             }
                         });
+                        A.present();
+                    }
+                },
+                {
+                    text: 'Add Filter',
+                    handler: ()=>{
+                        let A = this.AlertCtrl.create();
+                        A.setTitle("Crate Filter");
+                        A.setMessage("Create your own filter combination");
+                        A.addInput({
+                            type:"Text",
+                            label:"Filter Name"
+                        });
+                        A.addButton("Cancel");
+                        A.addButton({
+                            text:"Save",
+                            handler:data=>{
+                                this.IonicStorage.get('Filter').then((val) =>{
+                                    val = JSON.parse(val);
+                                    var name = val.Name;
+                                    var Con = val.Cnt;
+                                    var Cat = val.cat;
+                                    name.push(data[0]);
+                                    Con.push(this.COUNTRY);
+                                    Cat.push(this.CAT);
+
+                                    var json_main = {
+                                        Name: name,
+                                        Cnt: Con,
+                                        cat:Cat
+                                    };
+
+                                    this.IonicStorage.set('Filter',JSON.stringify(json_main));
+                                });
+                            }
+                        });
+                        A.present();
+                    }
+                },
+                {
+                    text:"Get Filter",
+                    handler:()=>{
+                        let A = this.AlertCtrl.create();
+                        A.setTitle("Customized Filter");
+                        this.IonicStorage.get('Filter').then((val)=>{
+                            val = JSON.parse(val);
+                            var Name = val.Name;
+                            var cnt = val.Cnt;
+                            var con = val.cat;
+                            for(var i=0 ; i<Name.length ; i++){
+                                A.addButton({
+                                    text:Name[i],
+                                    handler:()=>{
+                                        console.log(Name[i]);
+                                        this.COUNTRY = cnt[i];
+                                        this.CAT =con[i];
+                                        console.log(this.COUNTRY+" - "+this.CAT);
+                                    }
+                                });
+                            }
+                        }); 
                         A.present();
                     }
                 }

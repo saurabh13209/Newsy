@@ -11,12 +11,14 @@ import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { IonicStorageModule } from '@ionic/storage';
 import { BookmarkPage } from '../pages/bookmark/bookmark' 
 import { SocialSharing } from '@ionic-native/social-sharing';
+import { AboutPage } from '../pages/about/about'
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
-    BookmarkPage
+    BookmarkPage,
+    AboutPage
   ],
   imports: [
     BrowserModule,
@@ -28,7 +30,8 @@ import { SocialSharing } from '@ionic-native/social-sharing';
   entryComponents: [
     MyApp,
     HomePage,
-    BookmarkPage
+    BookmarkPage,
+    AboutPage
   ],
   providers: [
     StatusBar,
