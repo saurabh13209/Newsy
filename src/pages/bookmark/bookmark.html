@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-navbar color="danger">
+  <ion-navbar color="#212121">
     <ion-buttons start>
       <button ion-button icon-only menuToggle>
         <ion-icon name="menu"></ion-icon>
@@ -11,7 +11,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding style="background:#FEFFEF">
+<ion-content padding style="background: #424242;">
   <ion-list *ngFor="let ele of ImageItem  ; let i=index;">
     <ion-card class="EachCard">
       <ion-item>
@@ -23,7 +23,7 @@
           </button>
         </div>
       </ion-item>
-      <ion-card-content (click)="click_main(ele.Desc)" style="position: relative;top: -20px;">
+      <ion-card-content (click)="click_main(ele.Link)" style="position: relative;top: -20px;">
         <ion-card-title>
           {{ ele.Title }}
         </ion-card-title>
