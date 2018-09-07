@@ -47,7 +47,7 @@
         <div style="text-align:rightleft;">
           <img style="height:10%;width:10%;float: left;margin: 0%;" class="ImageMain" (click)="Bookmark(i , ele.Image , ele.Title , ele.Desc , ele.Link)"
             src=" {{ ele.BookImage }} ">
-          <button style="background: white;" (click)="ShareIt(ele.Title+'\nTo Read more News, Download Newsy.' , ele.Image , ele.Link)">
+          <button style="background: white;" (click)="ShareIt(ele.Title+'\n'+ ele.Link + '\nTo Read more News, Download Newsy from :\n' , ele.Image , 'https://play.google.com/store/apps/details?id=com.saurabh.Newsy')">
             <img src="https://png.icons8.com/metro/1600/forward-arrow.png" style="height:10%;width:10%;">
           </button>
         </div>

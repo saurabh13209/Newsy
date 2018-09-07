@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { NavController, MenuController, AlertController, ActionSheetController } from 'ionic-angular';
+import { Platform, NavController, MenuController, AlertController, ActionSheetController } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
 import { InAppBrowser, InAppBrowserOptions } from '@ionic-native/in-app-browser';
@@ -22,9 +22,11 @@ export class HomePage {
     public CAT: any = "general";
     public RefreshMaker: any;
 
-    constructor(private Social: SocialSharing, private AlertCtrl: AlertController, private ActionCtrl: ActionSheetController, public menuCtrl: MenuController, public navCtrl: NavController, public http: HttpClient, public inAppBrowser: InAppBrowser, public IonicStorage: Storage) {
-
+    constructor(private platform: Platform, private Social: SocialSharing, private AlertCtrl: AlertController, private ActionCtrl: ActionSheetController, public menuCtrl: MenuController, public navCtrl: NavController, public http: HttpClient, public inAppBrowser: InAppBrowser, public IonicStorage: Storage) {
+        console.log("kicme");
     }
+
+
 
     doRefresh(refresher) {
         console.log('Begin async operation', refresher);
@@ -432,15 +434,42 @@ export class HomePage {
             this.IonicStorage.set('DATA_VAL', JSON.stringify(json_new));
         });
     }
+    ionViewWillEnter() {
 
-    ionViewDidLoad() {
         this.IonicStorage.get('Cnt').then((val) => {
             this.COUNTRY = val;
 
             this.IonicStorage.get('Cat').then((val) => {
                 this.CAT = val;
-                this.MainLink = "https://newsapi.org/v2/top-headlines?country=" + this.COUNTRY + "&category=" + this.CAT + "&apiKey=2719918152a7463492d900316ee90bf1";
-                this.login();
+                if (this.CAT) {
+                    this.MainLink = "https://newsapi.org/v2/top-headlines?country=" + this.COUNTRY + "&category=" + this.CAT + "&apiKey=2719918152a7463492d900316ee90bf1";
+                    this.login();
+                } else {
+                    this.COUNTRY = 'in';
+                    this.CAT = 'general';
+                    this.MainLink = "https://newsapi.org/v2/top-headlines?country=" + this.COUNTRY + "&category=" + this.CAT + "&apiKey=2719918152a7463492d900316ee90bf1";
+                    this.login();
+                }
+            })
+        });
+    }
+
+    ionViewDidLoad() {
+
+        this.IonicStorage.get('Cnt').then((val) => {
+            this.COUNTRY = val;
+
+            this.IonicStorage.get('Cat').then((val) => {
+                this.CAT = val;
+                if (this.CAT) {
+                    this.MainLink = "https://newsapi.org/v2/top-headlines?country=" + this.COUNTRY + "&category=" + this.CAT + "&apiKey=2719918152a7463492d900316ee90bf1";
+                    this.login();
+                } else {
+                    this.COUNTRY = 'in';
+                    this.CAT = 'general';
+                    this.MainLink = "https://newsapi.org/v2/top-headlines?country=" + this.COUNTRY + "&category=" + this.CAT + "&apiKey=2719918152a7463492d900316ee90bf1";
+                    this.login();
+                }
             })
         });
 
