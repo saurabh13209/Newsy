@@ -2,9 +2,12 @@
   <ion-content>
     <img src="http://wpuploads.appadvice.com/wp-content/uploads/2015/04/news.jpg" style="padding:0%;margin:0%;" height="25%"
       width="100%">
-    <button style="font-weight: bold" ion-item (click)="HomePageMaker()">
-      Home
-    </button>
+      <button style="font-weight: bold" ion-item (click)="HomePageMaker()">
+        Home
+      </button>
+      <button style="font-weight: bold" ion-item (click)="SettingPageMaker()">
+        Settings
+      </button>
     <button style="font-weight: bold" ion-item (click)="BookmarkPageMaker()">
       Bookmark
     </button>
@@ -29,7 +32,10 @@
 </ion-header>
 
 <ion-content padding style="background: #424242;">
-
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  
   <ion-searchbar (ionInput)="getSearchRes($event)"></ion-searchbar>
   <ion-fab bottom right>
     <button ion-fab (click)="FilterAdder()"><ion-icon name="flag"></ion-icon></button>

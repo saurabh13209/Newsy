@@ -1,0 +1,27 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Setting Page</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <div style="text-align:center;margin-top: 10%;">
+    <h3>Select Country and Category for which you want to get news</h3>
+    <br/>
+    <div>
+      <button ion-button (click)="SetCountry()">Select
+        Country</button>
+      <h4 id="CountrySel">India</h4>
+    </div>
+    <div>
+      <button ion-button  (click)="SetCategory()" >Select
+        Category</button>
+      <h4 id="CategorySel">Entertainment</h4>
+    </div>
+  </div>
+
+</ion-content>

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.saurabh.Newsy" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.saurabh.Newsy" version="1.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Newsy</name>
     <description>An App which keep you updated</description>
     <author email="agrawal99saurabh@gmail.com" href="http://ionicframework.com/">Saurabh Agrawal</author>
@@ -83,6 +83,6 @@
     <plugin name="cordova-plugin-device" spec="^2.0.2" />
     <plugin name="cordova-plugin-splashscreen" spec="^5.0.2" />
     <plugin name="cordova-plugin-x-socialsharing" spec="^5.4.1" />
-    <engine name="android" spec="7.0.0" />
     <engine name="ios" spec="4.5.5" />
+    <engine name="android" spec="^7.0.0" />
 </widget>

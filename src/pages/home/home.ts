@@ -7,6 +7,7 @@ import { Storage } from '@ionic/storage'
 import { BookmarkPage } from '../../pages/bookmark/bookmark';
 import { SocialSharing } from '@ionic-native/social-sharing';
 import { AboutPage } from '../about/about';
+import { SettingPage } from '../setting/setting';
 
 @Component({
     selector: 'page-home',
@@ -18,7 +19,7 @@ export class HomePage {
     public Bookmark_image: any;
     public SearchBox: any;
     public COUNTRY: any = "in";
-    public CAT: any = "entertainment";
+    public CAT: any = "general";
     public RefreshMaker: any;
 
     constructor(private Social: SocialSharing, private AlertCtrl: AlertController, private ActionCtrl: ActionSheetController, public menuCtrl: MenuController, public navCtrl: NavController, public http: HttpClient, public inAppBrowser: InAppBrowser, public IonicStorage: Storage) {
@@ -433,7 +434,20 @@ export class HomePage {
     }
 
     ionViewDidLoad() {
-        this.login();
+        this.IonicStorage.get('Cnt').then((val) => {
+            this.COUNTRY = val;
+
+            this.IonicStorage.get('Cat').then((val) => {
+                this.CAT = val;
+                this.MainLink = "https://newsapi.org/v2/top-headlines?country=" + this.COUNTRY + "&category=" + this.CAT + "&apiKey=2719918152a7463492d900316ee90bf1";
+                this.login();
+            })
+        });
+
+    }
+
+    SettingPageMaker() {
+        this.navCtrl.push(SettingPage);
     }
 
 
@@ -450,6 +464,7 @@ export class HomePage {
 
     login() {
         let data: Observable<any>;
+        console.log(this.MainLink);
         data = this.http.get(this.MainLink);
         data.subscribe(result => {
             var json_get = result.articles;
@@ -485,7 +500,7 @@ export class HomePage {
                     }
                     try {
                         this.RefreshMaker.complete();
-                    }catch(e){
+                    } catch (e) {
 
                     }
                     main_array.push(temp);

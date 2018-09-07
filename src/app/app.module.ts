@@ -12,13 +12,15 @@ import { IonicStorageModule } from '@ionic/storage';
 import { BookmarkPage } from '../pages/bookmark/bookmark' 
 import { SocialSharing } from '@ionic-native/social-sharing';
 import { AboutPage } from '../pages/about/about'
+import { SettingPage } from  '../pages/setting/setting'
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
     BookmarkPage,
-    AboutPage
+    AboutPage,
+    SettingPage
   ],
   imports: [
     BrowserModule,
@@ -31,7 +33,8 @@ import { AboutPage } from '../pages/about/about'
     MyApp,
     HomePage,
     BookmarkPage,
-    AboutPage
+    AboutPage,
+    SettingPage
   ],
   providers: [
     StatusBar,
