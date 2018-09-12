@@ -31,17 +31,17 @@ export class HomePage {
     doRefresh(refresher) {
         console.log('Begin async operation', refresher);
         this.RefreshMaker = refresher;
-        this.login();
+        this.login(this.CAT);
     }
 
     getSearchRes(ev: any) {
         const val = ev.target.value;
         if (val && val.trim() != '') {
             this.MainLink = "https://newsapi.org/v2/everything?q=" + val + "&apiKey=2719918152a7463492d900316ee90bf1"
-            this.login();
+            this.login(this.CAT);
         } else {
             this.MainLink = "https://newsapi.org/v2/top-headlines?country=" + this.COUNTRY + "&category=" + this.CAT + "&apiKey=2719918152a7463492d900316ee90bf1";
-            this.login();
+            this.login(this.CAT);
         }
     }
 
@@ -295,8 +295,8 @@ export class HomePage {
                             handler: data => {
                                 console.log(data);
                                 this.COUNTRY = data;
-                                this.MainLink = "https://newsapi.org/v2/top-headlines?country=" + this.COUNTRY + "&category=" + this.CAT + "&apiKey=2719918152a7463492d900316ee90bf1"; this.login();
-                                this.login();
+                                this.MainLink = "https://newsapi.org/v2/top-headlines?country=" + this.COUNTRY + "&category=" + this.CAT + "&apiKey=2719918152a7463492d900316ee90bf1"; 
+                                this.login(this.CAT);
 
                             }
                         });
@@ -355,7 +355,7 @@ export class HomePage {
                             handler: data => {
                                 this.CAT = data;
                                 this.MainLink = "https://newsapi.org/v2/top-headlines?country=" + this.COUNTRY + "&category=" + this.CAT + "&apiKey=2719918152a7463492d900316ee90bf1";
-                                this.login();
+                                this.login(this.CAT);
                             }
                         });
                         A.present();
@@ -443,12 +443,12 @@ export class HomePage {
                 this.CAT = val;
                 if (this.CAT) {
                     this.MainLink = "https://newsapi.org/v2/top-headlines?country=" + this.COUNTRY + "&category=" + this.CAT + "&apiKey=2719918152a7463492d900316ee90bf1";
-                    this.login();
+                    this.login(this.CAT);
                 } else {
                     this.COUNTRY = 'in';
                     this.CAT = 'general';
                     this.MainLink = "https://newsapi.org/v2/top-headlines?country=" + this.COUNTRY + "&category=" + this.CAT + "&apiKey=2719918152a7463492d900316ee90bf1";
-                    this.login();
+                    this.login(this.CAT);
                 }
             })
         });
@@ -463,12 +463,12 @@ export class HomePage {
                 this.CAT = val;
                 if (this.CAT) {
                     this.MainLink = "https://newsapi.org/v2/top-headlines?country=" + this.COUNTRY + "&category=" + this.CAT + "&apiKey=2719918152a7463492d900316ee90bf1";
-                    this.login();
+                    this.login(this.CAT);
                 } else {
                     this.COUNTRY = 'in';
                     this.CAT = 'general';
                     this.MainLink = "https://newsapi.org/v2/top-headlines?country=" + this.COUNTRY + "&category=" + this.CAT + "&apiKey=2719918152a7463492d900316ee90bf1";
-                    this.login();
+                    this.login(this.CAT);
                 }
             })
         });
@@ -491,7 +491,7 @@ export class HomePage {
 
     public MainLink: any = "https://newsapi.org/v2/top-headlines?country=" + this.COUNTRY + "&category=" + this.CAT + "&apiKey=2719918152a7463492d900316ee90bf1";
 
-    login() {
+    login(categoryMain) {
         let data: Observable<any>;
         console.log(this.MainLink);
         data = this.http.get(this.MainLink);
@@ -527,6 +527,7 @@ export class HomePage {
                             "BookImage": "../../assets/imgs/bookmark_black.png"
                         };
                     }
+                    console.log(temp.Link);
                     try {
                         this.RefreshMaker.complete();
                     } catch (e) {
