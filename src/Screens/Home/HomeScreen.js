@@ -8,6 +8,7 @@ import { Observer } from 'mobx-react';
 import { fontCustomSize } from '../../Common/fontCustomSize';
 import FontistoIcons from 'react-native-vector-icons/Fontisto';
 import AntIcons from 'react-native-vector-icons/AntDesign';
+import database from '@react-native-firebase/database';
 
 export default HomeScreen = ({ navigation }) => {
 
@@ -35,7 +36,13 @@ export default HomeScreen = ({ navigation }) => {
                             <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', padding: fontCustomSize(10), paddingBottom: 0 }}>
                                 <View style={{ flex: 1, flexDirection: 'row' }}>
                                     <View style={{ flex: 1 }}>
-                                        <TouchableOpacity style={{ flexDirection: 'row', flexDirection: 'row', }}>
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                database().ref("App/").set({
+                                                    valu: "Kickme"
+                                                })
+                                            }}
+                                            style={{ flexDirection: 'row', flexDirection: 'row', }}>
                                             <AntIcons name="like2" size={fontCustomSize(16)} color="black" />
                                             <Text style={{ marginLeft: fontCustomSize(5), fontSize: fontCustomSize(14), fontFamily: "Bold" }}>12</Text>
                                         </TouchableOpacity>
