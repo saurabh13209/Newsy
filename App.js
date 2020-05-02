@@ -7,6 +7,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import HomeScreen from './src/Screens/Home/HomeScreen';
 import MemesScreen from './src/Screens/Common/MemesScreen';
 import ProfileScreen from './src/Screens/Profile/ProfileScreen';
+import { fontCustomSize } from './src/Common/fontCustomSize';
+import WorldScreen from './src/Screens/WorldNews/WorldScreen';
 
 export default App = () => {
 
@@ -14,6 +16,28 @@ export default App = () => {
   const BottomTab = createBottomTabNavigator();
 
   HomeScreenFunc = () => {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen component={HomeScreen} name="HomeScreen" options={{ title: "Newsy" }} />
+        <Stack.Screen component={MemesScreen} name="MemesScreen" options={{ title: "Related Memes" }} />
+      </Stack.Navigator>
+    );
+  }
+
+
+  WorldScreenFunc = () => {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen component={WorldScreen} name="HomeScreen" options={{ title: "Newsy" }} />
+        <Stack.Screen component={MemesScreen} name="MemesScreen" options={{ title: "Related Memes" }} />
+      </Stack.Navigator>
+    );
+  }
+
+
+
+
+  HeadlineScreenFunc = () => {
     return (
       <Stack.Navigator>
         <Stack.Screen component={HomeScreen} name="HomeScreen" options={{ title: "Newsy" }} />
@@ -35,11 +59,11 @@ export default App = () => {
   return (
     <NavigationContainer>
       <BottomTab.Navigator>
-        <BottomTab.Screen component={HomeScreenFunc} name="HomeFunc" options={{ title: "Home" }} />
-        <BottomTab.Screen component={HomeScreenFunc} name="HeadlineFunc" options={{ title: "Breaking News" }} />
-        <BottomTab.Screen component={HomeScreenFunc} name="SubsFunc" options={{ title: "Following" }} />
-        <BottomTab.Screen component={HomeScreenFunc} name="BookFunc" options={{ title: "Bookmarked" }} />
-        <BottomTab.Screen component={ProfileScreenFunc} name="ProfileFunc" options={{ title: "Profile" }} />
+        <BottomTab.Screen component={HomeScreenFunc} name="HomeFunc" options={{ tabBarIcon: ({ tintColor }) => (<Icon name="home" size={fontCustomSize(20)} color={tintColor} />), title: "Home" }} />
+        <BottomTab.Screen component={HomeScreenFunc} name="SubsFunc" options={{ tabBarIcon: ({ tintColor }) => (<Icon name="paperclip" size={fontCustomSize(20)} color={tintColor} />), title: "Following" }} />
+        <BottomTab.Screen component={WorldScreenFunc} name="WorldFunc" options={{ tabBarIcon: ({ tintColor }) => (<Icon name="globe" size={fontCustomSize(20)} color={tintColor} />), title: "World " }} />
+        <BottomTab.Screen component={HomeScreenFunc} name="BookFunc" options={{ tabBarIcon: ({ tintColor }) => (<Icon name="bookmark-o" size={fontCustomSize(20)} color={tintColor} />), title: "Bookmarked" }} />
+        <BottomTab.Screen component={ProfileScreenFunc} name="ProfileFunc" options={{ tabBarIcon: ({ tintColor }) => (<Icon name="user" size={fontCustomSize(20)} color={tintColor} />), title: "Profile" }} />
       </BottomTab.Navigator>
     </NavigationContainer>
   );

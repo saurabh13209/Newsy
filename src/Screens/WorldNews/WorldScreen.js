@@ -1,61 +1,68 @@
 import React, { useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity, Linking } from 'react-native';
-import * as RNLocalize from "react-native-localize";
+import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
 import Axios from 'axios';
-import NewsStore from '../../Store/NewsStore';
-import { FlatList } from 'react-native-gesture-handler';
-import { Observer } from 'mobx-react';
 import { fontCustomSize } from '../../Common/fontCustomSize';
-import AntIcons from 'react-native-vector-icons/AntDesign';
 import database from '@react-native-firebase/database';
+import { Observer } from 'mobx-react';
+import NewsStore from '../../Store/NewsStore';
+import AntIcons from 'react-native-vector-icons/AntDesign';
 
-export default HomeScreen = ({ navigation }) => {
+
+export default WorldScreen = () => {
 
     useEffect(() => {
         NewsStore.homeData = []
-        Axios.get("https://newsapi.org/v2/top-headlines?country=" + RNLocalize.getCountry().toLowerCase() + "&apiKey=2719918152a7463492d900316ee90bf1").then(res => {
-            res.data.articles.forEach((newsEach, index) => {
-                var keyMain = newsEach.publishedAt + newsEach.title.split(" ")[0] + newsEach.title.split(" ")[1] + newsEach.title.split(" ")[2];
-                keyMain = keyMain.split(".");
-                keyMain = keyMain.join();
-                keyMain = keyMain.split("#");
-                keyMain = keyMain.join();
-                keyMain = keyMain.split("$");
-                keyMain = keyMain.join();
-                keyMain = keyMain.split("[");
-                keyMain = keyMain.join();
-                keyMain = keyMain.split("'");
-                keyMain = keyMain.join();
-                keyMain = keyMain.split("]");
-                keyMain = keyMain.join();
-                keyMain = keyMain.split("\"");
-                keyMain = keyMain.join();
-                database().ref("News/" + keyMain + "/").once("value", (resData => {
-                    if (resData.val() == null) {
-                        database().ref("News/" + keyMain + "/").set({
-                            "Like": 0,
-                            "Dislike": 0,
-                        })
-                        var temp = newsEach;
-                        temp["Like"] = 0;
-                        temp["Dislike"] = 0;
-                        NewsStore.homeData = [
-                            ...NewsStore.homeData,
-                            temp
-                        ]
-                    } else {
-                        var temp = newsEach;
-                        temp["Like"] = resData.val()["Like"];
-                        temp["Dislike"] = resData.val()["Dislike"];
-                        NewsStore.homeData = [
-                            ...NewsStore.homeData,
-                            temp
-                        ]
-                    }
-                }))
+        var tempdata = []
+        var countries = ["ae", "ar", "at", "au", "be", "bg", "br", "ca", "ch", "cn", "co", "cu", "cz", "de", "eg", "fr", "gb", "gr", "hk", "hu", "id", "ie", "il", "in", "it", "jp", "kr", "lt", "lv", "ma", "mx", "my", "ng", "nl", "no", "nz", "ph", "pl", "pt", "ro", "rs", "ru", "sa", "se", "sg", "si", "sk", "th", "tr", "tw", "ua", "us", "ve", "za"];
+        countries.forEach((country, index) => {
+            Axios.get("https://newsapi.org/v2/sources?language=en&country=" + country + "&apiKey=2719918152a7463492d900316ee90bf1").then(res => {
+                res.data.articles.forEach((newsEach) => {
+                    var keyMain = newsEach.publishedAt + newsEach.title.split(" ")[0] + newsEach.title.split(" ")[1] + newsEach.title.split(" ")[2];
+                    keyMain = keyMain.split(".");
+                    keyMain = keyMain.join();
+                    keyMain = keyMain.split("#");
+                    keyMain = keyMain.join();
+                    keyMain = keyMain.split("$");
+                    keyMain = keyMain.join();
+                    keyMain = keyMain.split("[");
+                    keyMain = keyMain.join();
+                    keyMain = keyMain.split("'");
+                    keyMain = keyMain.join();
+                    keyMain = keyMain.split("]");
+                    keyMain = keyMain.join();
+                    keyMain = keyMain.split("\"");
+                    keyMain = keyMain.join();
+                    database().ref("News/" + keyMain + "/").once("value", (resData => {
+                        if (resData.val() == null) {
+                            database().ref("News/" + keyMain + "/").set({
+                                "Like": 0,
+                                "Dislike": 0,
+                            })
+                            var temp = newsEach;
+                            temp["Like"] = 0;
+                            temp["Dislike"] = 0;
+                            tempdata = [
+                                ...tempdata,
+                                temp
+                            ]
+                        } else {
+                            var temp = newsEach;
+                            temp["Like"] = resData.val()["Like"];
+                            temp["Dislike"] = resData.val()["Dislike"];
+                            tempdata = [
+                                ...tempdata,
+                                temp
+                            ]
+                        }
+                        if (index == countries.length - 1) {
+                            console.log(tempdata.length);
+                            NewsStore.homeData = tempdata;
+                        }
+                    }))
+                })
             })
         })
-    })
+    }, [])
 
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
