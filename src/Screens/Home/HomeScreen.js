@@ -7,6 +7,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import { Observer } from 'mobx-react';
 import { fontCustomSize } from '../../Common/fontCustomSize';
 import AntIcons from 'react-native-vector-icons/AntDesign';
+import FontIcons from 'react-native-vector-icons/FontAwesome';
 import database from '@react-native-firebase/database';
 
 export default HomeScreen = ({ navigation }) => {
@@ -69,11 +70,18 @@ export default HomeScreen = ({ navigation }) => {
                             }}
                         >
                             <View style={{ flexDirection: 'column', margin: 10, elevation: fontCustomSize(5), backgroundColor: 'white', borderRadius: fontCustomSize(5) }}>
+                                {item.source.name == null ? null : item.author == "" ? null : <View style={{ margin: fontCustomSize(10), marginBottom: 0, alignItems: "center", flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <Text style={{ fontFamily: "Bold", color: 'black' }}>{item.source.name}</Text>
+                                    <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderRadius: fontCustomSize(10), borderColor: '#252525', borderWidth: 1, padding: fontCustomSize(4), paddingLeft: fontCustomSize(8), paddingRight: fontCustomSize(8), }}>
+                                        <AntIcons name="plus" color="#252525" style={{ marginRight: fontCustomSize(5) }} />
+                                        <Text style={{ fontFamily: "Regular" }}>Follow</Text>
+                                    </TouchableOpacity>
+                                </View>}
                                 {item.author == null ? null : item.author == "" ? null : <TouchableOpacity
                                     onPress={() => {
                                         console.log("Open Page post");
                                     }}
-                                ><Text style={{ padding: fontCustomSize(10), fontFamily: "Bold", color: 'black' }}>{item.author}</Text></TouchableOpacity>}
+                                ><Text style={{ padding: fontCustomSize(10), paddingTop: fontCustomSize(5), fontFamily: "Medium", color: 'black' }}>{item.author}</Text></TouchableOpacity>}
                                 {item.urlToImage == "" ? null : <Image source={{ uri: item.urlToImage }} style={{ height: fontCustomSize(160), resizeMode: "cover" }} />}
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', padding: fontCustomSize(10), paddingBottom: 0 }}>
                                     <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -154,6 +162,13 @@ export default HomeScreen = ({ navigation }) => {
                                     <Text style={{ fontSize: fontCustomSize(14), fontFamily: "SemiBold" }}>{item.title}</Text>
                                     <Text style={{ fontSize: fontCustomSize(11), fontFamily: "Regular", marginTop: fontCustomSize(3) }}>{item.description}></Text>
                                 </View>
+                                <View style={{ marginLeft: fontCustomSize(10), flexDirection: 'row', marginRight: fontCustomSize(10), marginBottom: fontCustomSize(10), justifyContent: 'space-between' }}>
+                                    <Text style={{ fontFamily: "Regular", color: "#2c2d2d" }}>published At: {new Date(item.publishedAt).getHours()}:{new Date(item.publishedAt).getMinutes()}</Text>
+                                    <TouchableOpacity style={{ flexDirection: 'row', }}>
+                                        <FontIcons name="bookmark-o" color="#252525" size={fontCustomSize(20)} style={{ marginRight: fontCustomSize(5) }} />
+                                    </TouchableOpacity>
+                                </View>
+
                             </View>
                         </TouchableOpacity>)}
                         keyExtractor={(item) => (item.title + "")} />)
