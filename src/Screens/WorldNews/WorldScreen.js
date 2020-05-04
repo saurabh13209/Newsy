@@ -1,171 +1,91 @@
-import React, { useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, TouchableOpacity, Image, Dimensions } from 'react-native';
 import Axios from 'axios';
 import { fontCustomSize } from '../../Common/fontCustomSize';
 import database from '@react-native-firebase/database';
 import { Observer } from 'mobx-react';
 import NewsStore from '../../Store/NewsStore';
 import AntIcons from 'react-native-vector-icons/AntDesign';
-
+import MatIcon from 'react-native-vector-icons/Octicons'
 
 export default WorldScreen = () => {
 
-    useEffect(() => {
-        NewsStore.homeData = []
-        var tempdata = []
-        var countries = ["ae", "ar", "at", "au", "be", "bg", "br", "ca", "ch", "cn", "co", "cu", "cz", "de", "eg", "fr", "gb", "gr", "hk", "hu", "id", "ie", "il", "in", "it", "jp", "kr", "lt", "lv", "ma", "mx", "my", "ng", "nl", "no", "nz", "ph", "pl", "pt", "ro", "rs", "ru", "sa", "se", "sg", "si", "sk", "th", "tr", "tw", "ua", "us", "ve", "za"];
-        countries.forEach((country, index) => {
-            Axios.get("https://newsapi.org/v2/sources?language=en&country=" + country + "&apiKey=2719918152a7463492d900316ee90bf1").then(res => {
-                res.data.articles.forEach((newsEach) => {
-                    var keyMain = newsEach.publishedAt + newsEach.title.split(" ")[0] + newsEach.title.split(" ")[1] + newsEach.title.split(" ")[2];
-                    keyMain = keyMain.split(".");
-                    keyMain = keyMain.join();
-                    keyMain = keyMain.split("#");
-                    keyMain = keyMain.join();
-                    keyMain = keyMain.split("$");
-                    keyMain = keyMain.join();
-                    keyMain = keyMain.split("[");
-                    keyMain = keyMain.join();
-                    keyMain = keyMain.split("'");
-                    keyMain = keyMain.join();
-                    keyMain = keyMain.split("]");
-                    keyMain = keyMain.join();
-                    keyMain = keyMain.split("\"");
-                    keyMain = keyMain.join();
-                    database().ref("News/" + keyMain + "/").once("value", (resData => {
-                        if (resData.val() == null) {
-                            database().ref("News/" + keyMain + "/").set({
-                                "Like": 0,
-                                "Dislike": 0,
-                            })
-                            var temp = newsEach;
-                            temp["Like"] = 0;
-                            temp["Dislike"] = 0;
-                            tempdata = [
-                                ...tempdata,
-                                temp
-                            ]
-                        } else {
-                            var temp = newsEach;
-                            temp["Like"] = resData.val()["Like"];
-                            temp["Dislike"] = resData.val()["Dislike"];
-                            tempdata = [
-                                ...tempdata,
-                                temp
-                            ]
-                        }
-                        if (index == countries.length - 1) {
-                            console.log(tempdata.length);
-                            NewsStore.homeData = tempdata;
-                        }
-                    }))
-                })
-            })
-        })
-    }, [])
+    const [data, setData] = useState([]);
+    const [currentPage, setCurrentPage] = useState("business")
+    const themes = ["business", "entertainment", "general", "health", "science", "sports", "technology"]
 
+    getNews = (country, category) => {
+        var temp = [];
+        Axios.get("https://newsapi.org/v2/sources?country=" + country + "&category=" + category + "&apiKey=2719918152a7463492d900316ee90bf1").then(res => {
+            res.data.sources.forEach(dataMain => {
+                temp = [
+                    ...temp,
+                    dataMain
+                ]
+            })
+            setData(temp);
+        })
+    }
+    useEffect(() => {
+        getNews("us", "general")
+    }, [])
     return (
-        <View style={{ flex: 1, backgroundColor: 'white' }}>
+        <View style={{ backgroundColor: 'white', flex: 1 }}>
+            <View >
+                <FlatList
+                    alwaysBounceHorizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    style={{ paddingTop: fontCustomSize(5), paddingBottom: fontCustomSize(5) }}
+                    horizontal={true}
+                    data={themes}
+                    renderItem={({ item }) => (currentPage == item ? <TouchableOpacity style={{ margin: fontCustomSize(5), paddingRight: fontCustomSize(5), paddingLeft: fontCustomSize(5), borderRadius: fontCustomSize(10), backgroundColor: '#252525' }}>
+                        <Text style={{ fontFamily: "Medium", color: "white", margin: fontCustomSize(5) }}>{item}</Text>
+                    </TouchableOpacity> : <TouchableOpacity
+                        onPress={() => {
+                            setCurrentPage(item);
+                            getNews("us", item)
+                        }}
+                        style={{ margin: fontCustomSize(5), paddingRight: fontCustomSize(5), paddingLeft: fontCustomSize(5), borderRadius: fontCustomSize(10), borderColor: '#252525', borderWidth: 1 }}>
+                            <Text style={{ fontFamily: "Medium", color: "#252525", margin: fontCustomSize(5) }}>{item}</Text>
+                        </TouchableOpacity>)}
+                    keyExtractor={(item) => (item + "")}
+                />
+            </View>
+
             <Observer>
                 {
-                    () => (<FlatList
-                        data={NewsStore.homeData}
-                        renderItem={({ item, index }) => (<TouchableOpacity
-                            onPress={() => {
-                                Linking.openURL(item.url)
-                            }}
-                        >
-                            <View style={{ flexDirection: 'column', margin: 10, elevation: fontCustomSize(5), backgroundColor: 'white', borderRadius: fontCustomSize(5) }}>
-                                {item.author == null ? null : item.author == "" ? null : <TouchableOpacity
+                    () => (
+                        <View style={{ flex: 1 }}>
+                            <FlatList
+                                data={data}
+                                renderItem={({ item, index }) => (<TouchableOpacity
                                     onPress={() => {
-                                        console.log("Open Page post");
+                                        Linking.openURL(item.url)
                                     }}
-                                ><Text style={{ padding: fontCustomSize(10), fontFamily: "Bold", color: 'black' }}>{item.author}</Text></TouchableOpacity>}
-                                {item.urlToImage == "" ? null : <Image source={{ uri: item.urlToImage }} style={{ height: fontCustomSize(160), resizeMode: "cover" }} />}
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', padding: fontCustomSize(10), paddingBottom: 0 }}>
-                                    <View style={{ flex: 1, flexDirection: 'row' }}>
-                                        <View style={{ flex: 1 }}>
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    var temp = [];
-                                                    NewsStore.homeData.forEach((data, i) => {
-                                                        if (i == index) {
-                                                            var x = data;
-                                                            x["Like"] += 1;
-                                                            temp = [
-                                                                ...temp,
-                                                                x
-                                                            ]
-                                                        } else {
-                                                            temp = [
-                                                                ...temp,
-                                                                data
-                                                            ]
-                                                        }
-                                                    })
-                                                    NewsStore.homeData = temp
-                                                    var keyMain = item.publishedAt + item.title.split(" ")[0] + item.title.split(" ")[1] + item.title.split(" ")[2]
-                                                    database().ref("News/" + keyMain + "/Like").once("value", (likeValue => {
-                                                        database().ref("News/" + keyMain + "/").update({ "Like": parseInt(likeValue.val()) + 1 })
-                                                    }))
-                                                }}
-                                                style={{ flexDirection: 'row', flexDirection: 'row', }}>
-                                                <AntIcons name="like2" size={fontCustomSize(16)} color="black" />
-                                                <Text style={{ marginLeft: fontCustomSize(5), fontSize: fontCustomSize(14), fontFamily: "Bold" }}>{item.Like}</Text>
-                                            </TouchableOpacity>
-                                        </View>
-
-                                        <View style={{ flex: 1 }}>
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    var temp = [];
-                                                    NewsStore.homeData.forEach((data, i) => {
-                                                        if (i == index) {
-                                                            var x = data;
-                                                            x["Dislike"] += 1;
-                                                            temp = [
-                                                                ...temp,
-                                                                x
-                                                            ]
-                                                        } else {
-                                                            temp = [
-                                                                ...temp,
-                                                                data
-                                                            ]
-                                                        }
-                                                    })
-                                                    NewsStore.homeData = temp
-                                                    var keyMain = item.publishedAt + item.title.split(" ")[0] + item.title.split(" ")[1] + item.title.split(" ")[2]
-                                                    database().ref("News/" + keyMain + "/Dislike").once("value", (likeValue => {
-                                                        database().ref("News/" + keyMain + "/").update({ "Dislike": parseInt(likeValue.val()) + 1 })
-                                                    }))
-                                                }}
-                                                style={{ flexDirection: 'row', flexDirection: 'row', }}>
-                                                <AntIcons name="dislike2" size={fontCustomSize(16)} color="black" />
-                                                <Text style={{ marginLeft: fontCustomSize(5), fontSize: fontCustomSize(14), fontFamily: "Bold" }}>{item.Dislike}</Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                    </View>
-                                    <View style={{ flexDirection: 'row', justifyContent: 'flex-end', flex: 1 }}>
-                                        <TouchableOpacity
+                                >
+                                    <View style={{ flexDirection: 'column', margin: 10, elevation: fontCustomSize(5), backgroundColor: 'white', borderRadius: fontCustomSize(5) }}>
+                                        {item.name == null ? null : item.name == "" ? null : <TouchableOpacity
                                             onPress={() => {
-                                                navigation.navigate("MemesScreen");
+                                                console.log("Open Page post");
                                             }}
-                                            style={{ flexDirection: 'row', flexDirection: 'row', }}>
-                                            <AntIcons name="arrowsalt" size={fontCustomSize(16)} color="black" />
-                                            <Text style={{ marginLeft: fontCustomSize(7), fontSize: fontCustomSize(14), fontFamily: "Bold" }}>Related</Text>
-                                        </TouchableOpacity>
+                                        ><Text style={{ padding: fontCustomSize(10), paddingBottom: 0, fontFamily: "Bold", color: 'black' }}>{item.name}</Text></TouchableOpacity>}
+                                        <Text style={{ fontSize: fontCustomSize(14), fontFamily: "Medium", color: "#777", margin: fontCustomSize(10), marginTop: fontCustomSize(5) }}>{item.description}></Text>
                                     </View>
-                                </View>
-                                <View style={{ flexDirection: 'column', padding: fontCustomSize(10) }}>
-                                    <Text style={{ fontSize: fontCustomSize(14), fontFamily: "SemiBold" }}>{item.title}</Text>
-                                    <Text style={{ fontSize: fontCustomSize(11), fontFamily: "Regular", marginTop: fontCustomSize(3) }}>{item.description}></Text>
-                                </View>
-                            </View>
-                        </TouchableOpacity>)}
-                        keyExtractor={(item) => (item.title + "")} />)
+                                </TouchableOpacity>)}
+                                keyExtractor={(item) => (item.description + "")} />
+                            <TouchableOpacity
+                                style={{ backgroundColor: '#252525', elevation: 30, justifyContent: "center", alignItems: 'center', height: fontCustomSize(50), width: fontCustomSize(50), position: "absolute", zIndex: 2, bottom: fontCustomSize(30), borderRadius: fontCustomSize(50), right: fontCustomSize(30) }}
+                                onPress={() => {
+
+                                }}
+                            >
+                                <MatIcon name="globe" color="white" size={fontCustomSize(30)} />
+                            </TouchableOpacity>
+                        </View>
+                    )
                 }
             </Observer>
+
         </View >
     );
 }

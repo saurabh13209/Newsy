@@ -39,7 +39,7 @@ export default App = () => {
   WorldScreenFunc = () => {
     return (
       <Stack.Navigator>
-        <Stack.Screen component={WorldScreen} name="HomeScreen" options={{ title: "Newsy" }} />
+        <Stack.Screen component={WorldScreen} name="HomeScreen" options={{ title: "World News" }} />
         <Stack.Screen component={MemesScreen} name="MemesScreen" options={{ title: "Related Memes" }} />
       </Stack.Navigator>
     );
