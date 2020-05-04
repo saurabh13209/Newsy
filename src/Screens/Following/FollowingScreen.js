@@ -22,6 +22,10 @@ export default FollowingScreen = () => {
                         ...tempData,
                         newsEach
                     ]
+                    tempTitle = [
+                        ...tempTitle,
+                        newsEach.title
+                    ]
                     tempTitle.push(newsEach.title)
                 }
             })

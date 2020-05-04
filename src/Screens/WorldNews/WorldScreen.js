@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Image, Dimensions } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
 import Axios from 'axios';
 import { fontCustomSize } from '../../Common/fontCustomSize';
-import database from '@react-native-firebase/database';
 import { Observer } from 'mobx-react';
-import NewsStore from '../../Store/NewsStore';
-import AntIcons from 'react-native-vector-icons/AntDesign';
-import MatIcon from 'react-native-vector-icons/Octicons'
+import MatIcon from 'react-native-vector-icons/FontAwesome'
+import { Dialog } from 'react-native-simple-dialogs';
+import { ScrollView } from 'react-native-gesture-handler';
+
 
 export default WorldScreen = () => {
 
     const [data, setData] = useState([]);
-    const [currentPage, setCurrentPage] = useState("business")
-    const themes = ["business", "entertainment", "general", "health", "science", "sports", "technology"]
+    const [currentPage, setCurrentPage] = useState("general")
+    const [currentCountry, setCountry] = useState("ae");
+    const themes = ["general", "technology", "science", "business", "entertainment", "health", "sports"]
+    const [showDialog, setDialog] = useState(false);
 
     getNews = (country, category) => {
         var temp = [];
@@ -27,7 +29,7 @@ export default WorldScreen = () => {
         })
     }
     useEffect(() => {
-        getNews("us", "general")
+        getNews(currentCountry, "general")
     }, [])
     return (
         <View style={{ backgroundColor: 'white', flex: 1 }}>
@@ -43,7 +45,7 @@ export default WorldScreen = () => {
                     </TouchableOpacity> : <TouchableOpacity
                         onPress={() => {
                             setCurrentPage(item);
-                            getNews("us", item)
+                            getNews(currentCountry, item)
                         }}
                         style={{ margin: fontCustomSize(5), paddingRight: fontCustomSize(5), paddingLeft: fontCustomSize(5), borderRadius: fontCustomSize(10), borderColor: '#252525', borderWidth: 1 }}>
                             <Text style={{ fontFamily: "Medium", color: "#252525", margin: fontCustomSize(5) }}>{item}</Text>
@@ -51,6 +53,97 @@ export default WorldScreen = () => {
                     keyExtractor={(item) => (item + "")}
                 />
             </View>
+
+            <Dialog
+                visible={showDialog}
+                title="Choose Country"
+                backgroundColor={"#000"}
+                onTouchOutside={() => setDialog(false)} >
+                <ScrollView style={{ flexDirection: "column" }}>
+                    <View style={{ flexDirection: "row" }}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                setDialog(false);
+                                setCountry("ae");
+                                getNews(currentCountry, currentPage);
+                            }}
+                            style={{ flex: 1, alignItems: 'center' }}>
+                            <Image source={require("../../../assets/images/ae.png")} style={{ height: fontCustomSize(60), width: fontCustomSize(60) }} />
+                            <Text style={{ marginTop: fontCustomSize(5) }}>United Arab Emirates</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                setDialog(false);
+                                setCountry("ar");
+                                getNews(currentCountry, currentPage);
+                            }} style={{ flex: 1, alignItems: 'center' }}>
+                            <Image source={require("../../../assets/images/ar.png")} style={{ height: fontCustomSize(60), width: fontCustomSize(60) }} />
+                            <Text style={{ marginTop: fontCustomSize(5) }}>Argentina</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{ flexDirection: "row", marginTop: fontCustomSize(20) }}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                setDialog(false);
+                                setCountry("at");
+                                getNews(currentCountry, currentPage);
+                            }} style={{ flex: 1, alignItems: 'center' }}>
+                            <Image source={require("../../../assets/images/at.png")} style={{ height: fontCustomSize(60), width: fontCustomSize(60) }} />
+                            <Text style={{ marginTop: fontCustomSize(5) }}>Austria</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                setDialog(false);
+                                setCountry("au");
+                                getNews(currentCountry, currentPage);
+                            }} style={{ flex: 1, alignItems: 'center' }}>
+                            <Image source={require("../../../assets/images/au.png")} style={{ height: fontCustomSize(60), width: fontCustomSize(60) }} />
+                            <Text style={{ marginTop: fontCustomSize(5) }}>Australia</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{ flexDirection: "row", marginTop: fontCustomSize(20) }}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                setDialog(false);
+                                setCountry("ca");
+                                getNews(currentCountry, currentPage);
+                            }} style={{ flex: 1, alignItems: 'center' }}>
+                            <Image source={require("../../../assets/images/ca.png")} style={{ height: fontCustomSize(60), width: fontCustomSize(60) }} />
+                            <Text style={{ marginTop: fontCustomSize(5) }}>Canada</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                setDialog(false);
+                                setCountry("gb");
+                                getNews(currentCountry, currentPage);
+                            }} style={{ flex: 1, alignItems: 'center' }}>
+                            <Image source={require("../../../assets/images/gb.png")} style={{ height: fontCustomSize(60), width: fontCustomSize(60) }} />
+                            <Text style={{ marginTop: fontCustomSize(5) }}>United Kingdom</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{ flexDirection: "row", marginTop: fontCustomSize(20) }}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                setDialog(false);
+                                setCountry("in");
+                                getNews(currentCountry, currentPage);
+                            }} style={{ flex: 1, alignItems: 'center' }}>
+                            <Image source={require("../../../assets/images/in.png")} style={{ height: fontCustomSize(60), width: fontCustomSize(60) }} />
+                            <Text style={{ marginTop: fontCustomSize(5) }}>India</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                setDialog(false);
+                                setCountry("us");
+                                getNews(currentCountry, currentPage);
+                            }} style={{ flex: 1, alignItems: 'center' }}>
+                            <Image source={require("../../../assets/images/us.png")} style={{ height: fontCustomSize(60), width: fontCustomSize(60) }} />
+                            <Text style={{ marginTop: fontCustomSize(5) }}>United States</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                </ScrollView>
+            </Dialog>
 
             <Observer>
                 {
@@ -74,12 +167,12 @@ export default WorldScreen = () => {
                                 </TouchableOpacity>)}
                                 keyExtractor={(item) => (item.description + "")} />
                             <TouchableOpacity
-                                style={{ backgroundColor: '#252525', elevation: 30, justifyContent: "center", alignItems: 'center', height: fontCustomSize(50), width: fontCustomSize(50), position: "absolute", zIndex: 2, bottom: fontCustomSize(30), borderRadius: fontCustomSize(50), right: fontCustomSize(30) }}
+                                style={{ backgroundColor: '#252525', elevation: 5, justifyContent: "center", alignItems: 'center', height: fontCustomSize(50), width: fontCustomSize(50), position: "absolute", zIndex: 2, bottom: fontCustomSize(30), borderRadius: fontCustomSize(50), right: fontCustomSize(30) }}
                                 onPress={() => {
-
+                                    setDialog(true);
                                 }}
                             >
-                                <MatIcon name="globe" color="white" size={fontCustomSize(30)} />
+                                <MatIcon name="wpexplorer" color="white" size={fontCustomSize(30)} />
                             </TouchableOpacity>
                         </View>
                     )

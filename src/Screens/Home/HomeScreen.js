@@ -113,7 +113,7 @@ export default HomeScreen = ({ navigation }) => {
                                         console.log("Open Page post");
                                     }}
                                 ><Text style={{ padding: fontCustomSize(10), paddingTop: fontCustomSize(5), fontFamily: "Medium", color: 'black' }}>{item.author}</Text></TouchableOpacity>}
-                                {item.urlToImage == "" ? null : <Image source={{ uri: item.urlToImage }} style={{ height: fontCustomSize(160), resizeMode: "cover" }} />}
+                                {item.urlToImage == "" ? null : item.urlToImage == undefined ? null : <Image source={{ uri: item.urlToImage }} style={{ height: fontCustomSize(160), resizeMode: "cover" }} />}
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', padding: fontCustomSize(10), paddingBottom: 0 }}>
                                     <View style={{ flex: 1, flexDirection: 'row' }}>
                                         <View style={{ flex: 1 }}>
