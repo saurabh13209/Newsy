@@ -9,6 +9,8 @@ import MemesScreen from './src/Screens/Common/MemesScreen';
 import ProfileScreen from './src/Screens/Profile/ProfileScreen';
 import { fontCustomSize } from './src/Common/fontCustomSize';
 import WorldScreen from './src/Screens/WorldNews/WorldScreen';
+import FollowingScreen from './src/Screens/Following/FollowingScreen';
+import BookmarkScreen from './src/Screens/Bookmark/BookmarkScreen';
 
 export default App = () => {
 
@@ -24,11 +26,29 @@ export default App = () => {
     );
   }
 
+  FollowingScreenFunc = () => {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen component={FollowingScreen} name="FollowingScreen" options={{ title: "Following" }} />
+        <Stack.Screen component={MemesScreen} name="MemesScreen" options={{ title: "Related Memes" }} />
+      </Stack.Navigator>
+    );
+  }
+
 
   WorldScreenFunc = () => {
     return (
       <Stack.Navigator>
         <Stack.Screen component={WorldScreen} name="HomeScreen" options={{ title: "Newsy" }} />
+        <Stack.Screen component={MemesScreen} name="MemesScreen" options={{ title: "Related Memes" }} />
+      </Stack.Navigator>
+    );
+  }
+
+  BookmarkScreenFunc = () => {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen component={BookmarkScreen} name="BookmarkScreen" options={{ title: "Bookmark" }} />
         <Stack.Screen component={MemesScreen} name="MemesScreen" options={{ title: "Related Memes" }} />
       </Stack.Navigator>
     );
@@ -60,9 +80,9 @@ export default App = () => {
     <NavigationContainer>
       <BottomTab.Navigator>
         <BottomTab.Screen component={HomeScreenFunc} name="HomeFunc" options={{ tabBarIcon: ({ tintColor }) => (<Icon name="home" size={fontCustomSize(20)} color={tintColor} />), title: "Home" }} />
-        <BottomTab.Screen component={HomeScreenFunc} name="SubsFunc" options={{ tabBarIcon: ({ tintColor }) => (<Icon name="paperclip" size={fontCustomSize(20)} color={tintColor} />), title: "Following" }} />
+        <BottomTab.Screen component={FollowingScreenFunc} name="SubsFunc" options={{ tabBarIcon: ({ tintColor }) => (<Icon name="paperclip" size={fontCustomSize(20)} color={tintColor} />), title: "Following" }} />
         <BottomTab.Screen component={WorldScreenFunc} name="WorldFunc" options={{ tabBarIcon: ({ tintColor }) => (<Icon name="globe" size={fontCustomSize(20)} color={tintColor} />), title: "World " }} />
-        <BottomTab.Screen component={HomeScreenFunc} name="BookFunc" options={{ tabBarIcon: ({ tintColor }) => (<Icon name="bookmark-o" size={fontCustomSize(20)} color={tintColor} />), title: "Bookmarked" }} />
+        <BottomTab.Screen component={BookmarkScreenFunc} name="BookFunc" options={{ tabBarIcon: ({ tintColor }) => (<Icon name="bookmark-o" size={fontCustomSize(20)} color={tintColor} />), title: "Bookmarked" }} />
         <BottomTab.Screen component={ProfileScreenFunc} name="ProfileFunc" options={{ tabBarIcon: ({ tintColor }) => (<Icon name="user" size={fontCustomSize(20)} color={tintColor} />), title: "Profile" }} />
       </BottomTab.Navigator>
     </NavigationContainer>
