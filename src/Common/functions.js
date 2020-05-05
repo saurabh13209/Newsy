@@ -1,15 +1,15 @@
 import NewsStore from "../Store/NewsStore"
 import Realm from 'realm';
-import { BookmarkSchema, FollowSchema } from "./Schema";
+import { BookmarkSchema, FollowSchema, LikedSchema, UnlikedSchema } from "./Schema";
 
-const realm = new Realm({ schema: [BookmarkSchema, FollowSchema] });
+const realm = new Realm({ schema: [BookmarkSchema, FollowSchema, LikedSchema, UnlikedSchema] });
 
-export const getRealmData = () => {
-    var tempId = {}
+
+// FOLLOW DATABASE
+export const getFollowData = () => {
     NewsStore.followingPages = []
     NewsStore.followingNames = []
-    realm.objects("Follow").forEach((followPage, index) => {
-        tempId[followPage.id] = index;
+    realm.objects("Follow").forEach(followPage => {
         NewsStore.followingPages = [
             ...NewsStore.followingPages,
             followPage.id
@@ -19,12 +19,31 @@ export const getRealmData = () => {
             followPage
         ]
     })
-    return tempId;
 }
 
+export const setFollowData = (name, id) => {
+    if (NewsStore.followingPages.includes(id)) {
+        var temp = {}
+        realm.objects("Follow").forEach((data, index) => {
+            temp[data.id] = index
+        })
+        realm.write(() => {
+            realm.delete(realm.objects("Follow")[temp[id]])
+        })
+        getFollowData();
+    } else {
+        realm.write(() => {
+            realm.create("Follow", {
+                name: name,
+                id: id
+            })
+        })
+        getFollowData();
+    }
+}
 
-
-export const setBookMarkData = () => {
+// BOOKMARK DATABASE
+export const getBookmarkData = () => {
     NewsStore.bookmarkId = []
     NewsStore.bookmarkData = []
     realm.objects("Bookmark").forEach(bookmarkPage => {
@@ -37,4 +56,88 @@ export const setBookMarkData = () => {
             bookmarkPage
         ]
     })
+}
+
+export const setBookmarkData = (item) => {
+    if (!NewsStore.bookmarkId.includes(item.title)) {
+        NewsStore.bookmarkId.push(item.title);
+        realm.write(() => {
+            realm.create("Bookmark", {
+                sourceName: item.sourceName,
+                sourceId: item.sourceId,
+                url: item.url,
+                title: item.title,
+                urlToImage: item.urlToImage,
+                description: item.description,
+                publishedAt: item.publishedAt
+            })
+        })
+    } else {
+        var index = 0;
+        realm.objects("Bookmark").forEach((data, i) => {
+            if (data["title"] == item.title && data["url"] == item.url) {
+                index == i
+                return
+            }
+        })
+        realm.write(() => {
+            realm.delete(realm.objects("Bookmark")[index])
+        });
+    }
+    getBookmarkData();
+}
+
+// LIKE DATABASE
+export const addLike = (title) => {
+    realm.write(() => {
+        realm.create("Liked", {
+            title: title
+        })
+    })
+    setLikeDislike();
+}
+
+export const addDislike = (title) => {
+    realm.write(() => {
+        realm.create("Unliked", {
+            title: title
+        })
+    })
+    setLikeDislike();
+}
+
+export const setLikeDislike = () => {
+    var temp = [];
+    var liked = [];
+    var disliked = [];
+    realm.objects("Liked").forEach(val => {
+        liked.push(val.title)
+    })
+    realm.objects("Unliked").forEach(val => {
+        disliked.push(val.title)
+    })
+
+    NewsStore.homeData.forEach((data, i) => {
+        if (disliked.includes(data["title"] + data["publishedAt"])) {
+            var x = data;
+            x["Dislike"] += 1;
+            temp = [
+                ...temp,
+                x
+            ]
+        } else if (liked.includes(data["title"] + data["publishedAt"])) {
+            var x = data;
+            x["Like"] += 1;
+            temp = [
+                ...temp,
+                x
+            ]
+        } else {
+            temp = [
+                ...temp,
+                data
+            ]
+        }
+    })
+    NewsStore.homeData = temp
 }

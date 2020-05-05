@@ -9,20 +9,12 @@ import { fontCustomSize } from '../../Common/fontCustomSize';
 import AntIcons from 'react-native-vector-icons/AntDesign';
 import FontIcons from 'react-native-vector-icons/FontAwesome';
 import database from '@react-native-firebase/database';
-import { getRealmData, setBookMarkData } from '../../Common/functions';
-import Realm from 'realm';
-import { BookmarkSchema, FollowSchema } from '../../Common/Schema';
-
+import { addDislike, addLike, setFollowData, getFollowData, getBookmarkData, setBookmarkData } from '../../Common/functions';
 
 export default HomeScreen = ({ navigation }) => {
-
-    const [newsId, setMapId] = useState({})
-    const realm = new Realm({ schema: [BookmarkSchema, FollowSchema] });
-
-
     useEffect(() => {
-        setMapId(getRealmData());
-        setBookMarkData();
+        getFollowData();
+        getBookmarkData();
         NewsStore.homeData = []
         Axios.get("https://newsapi.org/v2/top-headlines?country=" + RNLocalize.getCountry().toLowerCase() + "&apiKey=2719918152a7463492d900316ee90bf1").then(res => {
             res.data.articles.forEach((newsEach, index) => {
@@ -86,24 +78,11 @@ export default HomeScreen = ({ navigation }) => {
                                         {
                                             () => (<TouchableOpacity
                                                 onPress={() => {
-                                                    if (NewsStore.followingPages.includes(item.source.id)) {
-                                                        realm.write(() => {
-                                                            realm.delete(realm.objects("Follow")[newsId[item.source.id]])
-                                                        })
-                                                        getRealmData()
-                                                    } else {
-                                                        realm.write(() => {
-                                                            realm.create("Follow", {
-                                                                name: item.source.name,
-                                                                id: item.source.id
-                                                            })
-                                                        })
-                                                        getRealmData()
-                                                    }
+                                                    setFollowData(item.source.id, item.source.name);
                                                 }}
-                                                style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderRadius: fontCustomSize(10), backgroundColor: NewsStore.followingPages.includes(item.source.id) ? "#252525" : "#fff", borderColor: NewsStore.followingPages.includes(item.source.id) ? "#fff" : "#252525", borderWidth: 1, padding: fontCustomSize(4), paddingLeft: fontCustomSize(8), paddingRight: fontCustomSize(8), }}>
-                                                {NewsStore.followingPages.includes(item.source.id) ? null : <AntIcons name="plus" color="#252525" style={{ marginRight: fontCustomSize(5) }} />}
-                                                <Text style={{ fontFamily: "Regular", color: NewsStore.followingPages.includes(item.source.id) ? "#fff" : "#252525" }}>{NewsStore.followingPages.includes(item.source.id) ? "Following" : "Follow"}</Text>
+                                                style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderRadius: fontCustomSize(10), backgroundColor: NewsStore.followingPages.includes(item.source.name) ? "#252525" : "#fff", borderColor: NewsStore.followingPages.includes(item.source.name) ? "#fff" : "#252525", borderWidth: 1, padding: fontCustomSize(4), paddingLeft: fontCustomSize(8), paddingRight: fontCustomSize(8), }}>
+                                                {NewsStore.followingPages.includes(item.source.name) ? null : <AntIcons name="plus" color="#252525" style={{ marginRight: fontCustomSize(5) }} />}
+                                                <Text style={{ fontFamily: "Regular", color: NewsStore.followingPages.includes(item.source.name) ? "#fff" : "#252525" }}>{NewsStore.followingPages.includes(item.source.name) ? "Following" : "Follow"}</Text>
                                             </TouchableOpacity>)
                                         }
                                     </Observer>
@@ -119,30 +98,18 @@ export default HomeScreen = ({ navigation }) => {
                                         <View style={{ flex: 1 }}>
                                             <TouchableOpacity
                                                 onPress={() => {
-                                                    var temp = [];
-                                                    NewsStore.homeData.forEach((data, i) => {
-                                                        if (i == index) {
-                                                            var x = data;
-                                                            x["Like"] += 1;
-                                                            temp = [
-                                                                ...temp,
-                                                                x
-                                                            ]
-                                                        } else {
-                                                            temp = [
-                                                                ...temp,
-                                                                data
-                                                            ]
-                                                        }
-                                                    })
-                                                    NewsStore.homeData = temp
-                                                    var keyMain = item.publishedAt + item.title.split(" ")[0] + item.title.split(" ")[1] + item.title.split(" ")[2]
-                                                    database().ref("News/" + keyMain + "/Like").once("value", (likeValue => {
-                                                        database().ref("News/" + keyMain + "/").update({ "Like": parseInt(likeValue.val()) + 1 })
-                                                    }))
+                                                    if (item.Like == 0) {
+                                                        addLike(item.title + item.publishedAt);
+                                                        var keyMain = item.publishedAt + item.title.split(" ")[0] + item.title.split(" ")[1] + item.title.split(" ")[2]
+                                                        database().ref("News/" + keyMain + "/Like").once("value", (likeValue => {
+                                                            database().ref("News/" + keyMain + "/").update({ "Like": parseInt(likeValue.val()) + 1 })
+                                                        }))
+                                                    } else {
+                                                        console.log("un dislike");
+                                                    }
                                                 }}
                                                 style={{ flexDirection: 'row', flexDirection: 'row', }}>
-                                                <AntIcons name="like2" size={fontCustomSize(16)} color="black" />
+                                                <Observer>{() => (<AntIcons name={item["Like"] == 1 ? "like1" : "like2"} size={fontCustomSize(16)} color="black" />)}</Observer>
                                                 <Text style={{ marginLeft: fontCustomSize(5), fontSize: fontCustomSize(14), fontFamily: "Bold" }}>{item.Like}</Text>
                                             </TouchableOpacity>
                                         </View>
@@ -150,30 +117,18 @@ export default HomeScreen = ({ navigation }) => {
                                         <View style={{ flex: 1 }}>
                                             <TouchableOpacity
                                                 onPress={() => {
-                                                    var temp = [];
-                                                    NewsStore.homeData.forEach((data, i) => {
-                                                        if (i == index) {
-                                                            var x = data;
-                                                            x["Dislike"] += 1;
-                                                            temp = [
-                                                                ...temp,
-                                                                x
-                                                            ]
-                                                        } else {
-                                                            temp = [
-                                                                ...temp,
-                                                                data
-                                                            ]
-                                                        }
-                                                    })
-                                                    NewsStore.homeData = temp
-                                                    var keyMain = item.publishedAt + item.title.split(" ")[0] + item.title.split(" ")[1] + item.title.split(" ")[2]
-                                                    database().ref("News/" + keyMain + "/Dislike").once("value", (likeValue => {
-                                                        database().ref("News/" + keyMain + "/").update({ "Dislike": parseInt(likeValue.val()) + 1 })
-                                                    }))
+                                                    if (item.Dislike == 0) {
+                                                        addDislike(item.title + item.publishedAt);
+                                                        var keyMain = item.publishedAt + item.title.split(" ")[0] + item.title.split(" ")[1] + item.title.split(" ")[2]
+                                                        database().ref("News/" + keyMain + "/Dislike").once("value", (likeValue => {
+                                                            database().ref("News/" + keyMain + "/").update({ "Dislike": parseInt(likeValue.val()) + 1 })
+                                                        }))
+                                                    } else {
+                                                        console.log("un dislike");
+                                                    }
                                                 }}
                                                 style={{ flexDirection: 'row', flexDirection: 'row', }}>
-                                                <AntIcons name="dislike2" size={fontCustomSize(16)} color="black" />
+                                                <Observer>{() => (<AntIcons name={item["Dislike"] == 1 ? "dislike1" : "dislike2"} size={fontCustomSize(16)} color="black" />)}</Observer>
                                                 <Text style={{ marginLeft: fontCustomSize(5), fontSize: fontCustomSize(14), fontFamily: "Bold" }}>{item.Dislike}</Text>
                                             </TouchableOpacity>
                                         </View>
@@ -209,23 +164,15 @@ export default HomeScreen = ({ navigation }) => {
                                         </TouchableOpacity>
                                         <TouchableOpacity
                                             onPress={() => {
-                                                if (!NewsStore.bookmarkId.includes(item.title)) {
-                                                    NewsStore.bookmarkId.push(item.title);
-                                                    realm.write(() => {
-                                                        realm.create("Bookmark", {
-                                                            sourceName: item.source.name == null ? "" : item.source.name,
-                                                            sourceId: item.author == null ? "" : item.author,
-                                                            url: item.url,
-                                                            title: item.title,
-                                                            urlToImage: item.urlToImage == null ? "" : item.urlToImage,
-                                                            description: item.description,
-                                                            publishedAt: item.publishedAt
-                                                        })
-                                                    })
-                                                    setBookMarkData();
-                                                } else {
-
-                                                }
+                                                setBookmarkData({
+                                                    sourceName: item.source.name == null ? "" : item.source.name,
+                                                    sourceId: item.author == null ? "" : item.author,
+                                                    url: item.url,
+                                                    title: item.title,
+                                                    urlToImage: item.urlToImage == null ? "" : item.urlToImage,
+                                                    description: item.description,
+                                                    publishedAt: item.publishedAt
+                                                });
                                             }}
                                             style={{ flexDirection: 'row' }}>
                                             <Observer>

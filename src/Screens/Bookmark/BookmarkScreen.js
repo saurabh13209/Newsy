@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, Text, Image, Linking } from 'react-native';
-import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
+import { View, Text, Image, Linking, TouchableOpacity, FlatList } from 'react-native';
 import { fontCustomSize } from '../../Common/fontCustomSize';
 import FontIcons from 'react-native-vector-icons/FontAwesome';
 import NewsStore from '../../Store/NewsStore';
 import { Observer } from 'mobx-react';
+import { setBookmarkData } from '../../Common/functions';
 
 export default BookmarkScreen = () => {
     return (
@@ -14,7 +14,7 @@ export default BookmarkScreen = () => {
                     () => (
                         <FlatList
                             data={NewsStore.bookmarkData}
-                            renderItem={({ item, index }) => (<TouchableOpacity
+                            renderItem={({ item }) => (<TouchableOpacity
                                 onPress={() => {
                                     Linking.openURL(item.url)
                                 }}
@@ -32,7 +32,19 @@ export default BookmarkScreen = () => {
                                     </View>
                                     <View style={{ marginLeft: fontCustomSize(10), flexDirection: 'row', marginRight: fontCustomSize(10), marginBottom: fontCustomSize(10), justifyContent: 'space-between' }}>
                                         <Text style={{ fontFamily: "Regular", color: "#2c2d2d" }}>published At: {new Date(item.publishedAt).getHours()}:{new Date(item.publishedAt).getMinutes()}</Text>
-                                        <TouchableOpacity style={{ flexDirection: 'row' }}>
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                setBookmarkData({
+                                                    sourceName: item.sourceName,
+                                                    sourceId: item.sourceId,
+                                                    url: item.url,
+                                                    title: item.title,
+                                                    urlToImage: item.urlToImage,
+                                                    description: item.description,
+                                                    publishedAt: item.publishedAt
+                                                });
+                                            }}
+                                            style={{ flexDirection: 'row' }}>
                                             <Observer>
                                                 {
                                                     () => (

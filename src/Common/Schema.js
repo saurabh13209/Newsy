@@ -18,3 +18,17 @@ export const FollowSchema = {
         name: "string",
     }
 }
+
+export const LikedSchema = {
+    name: "Liked",
+    properties: {
+        title: "string"
+    }
+}
+
+export const UnlikedSchema = {
+    name: "Unliked",
+    properties: {
+        title: "string"
+    }
+}

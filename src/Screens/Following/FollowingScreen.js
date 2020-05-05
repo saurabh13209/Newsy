@@ -34,8 +34,10 @@ export default FollowingScreen = () => {
     }
 
     useEffect(() => {
-        setCurrentPage(NewsStore.followingNames[0].name);
-        getNews(NewsStore.followingNames[0].id);
+        if (NewsStore.followingNames.length > 0) {
+            setCurrentPage(NewsStore.followingNames[0].name);
+            getNews(NewsStore.followingNames[0].id);
+        }
     }, [NewsStore.followingNames])
 
     return (
