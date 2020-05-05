@@ -83,7 +83,6 @@ export default App = () => {
         <BottomTab.Screen component={FollowingScreenFunc} name="SubsFunc" options={{ tabBarIcon: ({ tintColor }) => (<Icon name="paperclip" size={fontCustomSize(20)} color={tintColor} />), title: "Following" }} />
         <BottomTab.Screen component={WorldScreenFunc} name="WorldFunc" options={{ tabBarIcon: ({ tintColor }) => (<Icon name="globe" size={fontCustomSize(20)} color={tintColor} />), title: "World " }} />
         <BottomTab.Screen component={BookmarkScreenFunc} name="BookFunc" options={{ tabBarIcon: ({ tintColor }) => (<Icon name="bookmark-o" size={fontCustomSize(20)} color={tintColor} />), title: "Bookmarked" }} />
-        <BottomTab.Screen component={ProfileScreenFunc} name="ProfileFunc" options={{ tabBarIcon: ({ tintColor }) => (<Icon name="user" size={fontCustomSize(20)} color={tintColor} />), title: "Profile" }} />
       </BottomTab.Navigator>
     </NavigationContainer>
   );

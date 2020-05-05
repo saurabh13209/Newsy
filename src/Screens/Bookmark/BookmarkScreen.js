@@ -11,8 +11,9 @@ export default BookmarkScreen = () => {
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <Observer>
                 {
-                    () => (
-                        <FlatList
+                    () => (NewsStore.bookmarkData.length == 0 ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={{ color: "#252525", fontFamily: "Bold", fontSize: fontCustomSize(14) }}>No New bookmarked</Text>
+                    </View> : <FlatList
                             data={NewsStore.bookmarkData}
                             renderItem={({ item }) => (<TouchableOpacity
                                 onPress={() => {

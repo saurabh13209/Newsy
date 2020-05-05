@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import Axios from 'axios';
 import { fontCustomSize } from '../../Common/fontCustomSize';
 import { Observer } from 'mobx-react';
 import MatIcon from 'react-native-vector-icons/FontAwesome'
 import { Dialog } from 'react-native-simple-dialogs';
 import { ScrollView } from 'react-native-gesture-handler';
-
+import * as RNLocalize from "react-native-localize";
 
 export default WorldScreen = () => {
 
@@ -15,8 +15,11 @@ export default WorldScreen = () => {
     const [currentCountry, setCountry] = useState("ae");
     const themes = ["general", "technology", "science", "business", "entertainment", "health", "sports"]
     const [showDialog, setDialog] = useState(false);
+    const [isLoading, setLoading] = useState(true);
 
     getNews = (country, category) => {
+        console.log(country, category);
+        setLoading(true);
         var temp = [];
         Axios.get("https://newsapi.org/v2/sources?country=" + country + "&category=" + category + "&apiKey=2719918152a7463492d900316ee90bf1").then(res => {
             res.data.sources.forEach(dataMain => {
@@ -26,10 +29,16 @@ export default WorldScreen = () => {
                 ]
             })
             setData(temp);
+            setLoading(false);
         })
     }
     useEffect(() => {
-        getNews(currentCountry, "general")
+        if (["ae", "ar", "at", "au", "ca", "gb", "in", "us"].includes(RNLocalize.getCountry().toLowerCase())) {
+            getNews(RNLocalize.getCountry().toLowerCase(), "general")
+            setCountry(RNLocalize.getCountry().toLowerCase());
+        } else {
+            getNews(currentCountry, "general")
+        }
     }, [])
     return (
         <View style={{ backgroundColor: 'white', flex: 1 }}>
@@ -65,7 +74,7 @@ export default WorldScreen = () => {
                             onPress={() => {
                                 setDialog(false);
                                 setCountry("ae");
-                                getNews(currentCountry, currentPage);
+                                getNews("ae", currentPage);
                             }}
                             style={{ flex: 1, alignItems: 'center' }}>
                             <Image source={require("../../../assets/images/ae.png")} style={{ height: fontCustomSize(60), width: fontCustomSize(60) }} />
@@ -75,7 +84,7 @@ export default WorldScreen = () => {
                             onPress={() => {
                                 setDialog(false);
                                 setCountry("ar");
-                                getNews(currentCountry, currentPage);
+                                getNews("ar", currentPage);
                             }} style={{ flex: 1, alignItems: 'center' }}>
                             <Image source={require("../../../assets/images/ar.png")} style={{ height: fontCustomSize(60), width: fontCustomSize(60) }} />
                             <Text style={{ marginTop: fontCustomSize(5) }}>Argentina</Text>
@@ -86,7 +95,7 @@ export default WorldScreen = () => {
                             onPress={() => {
                                 setDialog(false);
                                 setCountry("at");
-                                getNews(currentCountry, currentPage);
+                                getNews("at", currentPage);
                             }} style={{ flex: 1, alignItems: 'center' }}>
                             <Image source={require("../../../assets/images/at.png")} style={{ height: fontCustomSize(60), width: fontCustomSize(60) }} />
                             <Text style={{ marginTop: fontCustomSize(5) }}>Austria</Text>
@@ -95,7 +104,7 @@ export default WorldScreen = () => {
                             onPress={() => {
                                 setDialog(false);
                                 setCountry("au");
-                                getNews(currentCountry, currentPage);
+                                getNews("au", currentPage);
                             }} style={{ flex: 1, alignItems: 'center' }}>
                             <Image source={require("../../../assets/images/au.png")} style={{ height: fontCustomSize(60), width: fontCustomSize(60) }} />
                             <Text style={{ marginTop: fontCustomSize(5) }}>Australia</Text>
@@ -106,7 +115,7 @@ export default WorldScreen = () => {
                             onPress={() => {
                                 setDialog(false);
                                 setCountry("ca");
-                                getNews(currentCountry, currentPage);
+                                getNews("ca", currentPage);
                             }} style={{ flex: 1, alignItems: 'center' }}>
                             <Image source={require("../../../assets/images/ca.png")} style={{ height: fontCustomSize(60), width: fontCustomSize(60) }} />
                             <Text style={{ marginTop: fontCustomSize(5) }}>Canada</Text>
@@ -115,7 +124,7 @@ export default WorldScreen = () => {
                             onPress={() => {
                                 setDialog(false);
                                 setCountry("gb");
-                                getNews(currentCountry, currentPage);
+                                getNews("gb", currentPage);
                             }} style={{ flex: 1, alignItems: 'center' }}>
                             <Image source={require("../../../assets/images/gb.png")} style={{ height: fontCustomSize(60), width: fontCustomSize(60) }} />
                             <Text style={{ marginTop: fontCustomSize(5) }}>United Kingdom</Text>
@@ -126,7 +135,7 @@ export default WorldScreen = () => {
                             onPress={() => {
                                 setDialog(false);
                                 setCountry("in");
-                                getNews(currentCountry, currentPage);
+                                getNews("in", currentPage);
                             }} style={{ flex: 1, alignItems: 'center' }}>
                             <Image source={require("../../../assets/images/in.png")} style={{ height: fontCustomSize(60), width: fontCustomSize(60) }} />
                             <Text style={{ marginTop: fontCustomSize(5) }}>India</Text>
@@ -135,7 +144,7 @@ export default WorldScreen = () => {
                             onPress={() => {
                                 setDialog(false);
                                 setCountry("us");
-                                getNews(currentCountry, currentPage);
+                                getNews("us", currentPage);
                             }} style={{ flex: 1, alignItems: 'center' }}>
                             <Image source={require("../../../assets/images/us.png")} style={{ height: fontCustomSize(60), width: fontCustomSize(60) }} />
                             <Text style={{ marginTop: fontCustomSize(5) }}>United States</Text>
@@ -149,23 +158,27 @@ export default WorldScreen = () => {
                 {
                     () => (
                         <View style={{ flex: 1 }}>
-                            <FlatList
-                                data={data}
-                                renderItem={({ item, index }) => (<TouchableOpacity
-                                    onPress={() => {
-                                        Linking.openURL(item.url)
-                                    }}
-                                >
-                                    <View style={{ flexDirection: 'column', margin: 10, elevation: fontCustomSize(5), backgroundColor: 'white', borderRadius: fontCustomSize(5) }}>
-                                        {item.name == null ? null : item.name == "" ? null : <TouchableOpacity
+                            {isLoading ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                <ActivityIndicator size={"large"} color="#252525" />
+                            </View> : data.length == 0 ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                <Text style={{ color: "#252525", fontFamily: "Bold", fontSize: fontCustomSize(14) }}>No News</Text>
+                            </View> : <FlatList
+                                        data={data}
+                                        renderItem={({ item, index }) => (<TouchableOpacity
                                             onPress={() => {
-                                                console.log("Open Page post");
+                                                Linking.openURL(item.url)
                                             }}
-                                        ><Text style={{ padding: fontCustomSize(10), paddingBottom: 0, fontFamily: "Bold", color: 'black' }}>{item.name}</Text></TouchableOpacity>}
-                                        <Text style={{ fontSize: fontCustomSize(14), fontFamily: "Medium", color: "#777", margin: fontCustomSize(10), marginTop: fontCustomSize(5) }}>{item.description}></Text>
-                                    </View>
-                                </TouchableOpacity>)}
-                                keyExtractor={(item) => (item.description + "")} />
+                                        >
+                                            <View style={{ flexDirection: 'column', margin: 10, elevation: fontCustomSize(5), backgroundColor: 'white', borderRadius: fontCustomSize(5) }}>
+                                                {item.name == null ? null : item.name == "" ? null : <TouchableOpacity
+                                                    onPress={() => {
+                                                        console.log("Open Page post");
+                                                    }}
+                                                ><Text style={{ padding: fontCustomSize(10), paddingBottom: 0, fontFamily: "Bold", color: 'black' }}>{item.name}</Text></TouchableOpacity>}
+                                                <Text style={{ fontSize: fontCustomSize(14), fontFamily: "Medium", color: "#777", margin: fontCustomSize(10), marginTop: fontCustomSize(5) }}>{item.description}></Text>
+                                            </View>
+                                        </TouchableOpacity>)}
+                                        keyExtractor={(item) => (item.description + "")} />}
                             <TouchableOpacity
                                 style={{ backgroundColor: '#252525', elevation: 5, justifyContent: "center", alignItems: 'center', height: fontCustomSize(50), width: fontCustomSize(50), position: "absolute", zIndex: 2, bottom: fontCustomSize(30), borderRadius: fontCustomSize(50), right: fontCustomSize(30) }}
                                 onPress={() => {

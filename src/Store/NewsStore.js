@@ -6,6 +6,7 @@ class NewsStore {
     @observable followingData = [];
     @observable followingPages = []
     @observable followingNames = [];
+    @observable currentPage = ""
 
     @observable bookmarkId = [];
     @observable bookmarkData = []
