@@ -1,4 +1,4 @@
-package com.newsy;
+package com.saurabh.Newsy;
 
 import android.app.Application;
 import android.content.Context;

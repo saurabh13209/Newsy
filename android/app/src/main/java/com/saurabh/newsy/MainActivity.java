@@ -1,4 +1,4 @@
-package com.newsy;
+package com.saurabh.Newsy;
 
 import com.facebook.react.ReactActivity;
 
