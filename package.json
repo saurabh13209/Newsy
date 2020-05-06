@@ -1,6 +1,6 @@
 {
   "name": "Newsy",
-  "version": "0.0.1",
+  "version": "2.0.0",
   "babel": {
     "plugins": [
       [
@@ -36,6 +36,8 @@
     "@react-navigation/native": "^5.1.6",
     "@react-navigation/stack": "^5.2.11",
     "axios": "^0.19.2",
+    "hermesvm": "^0.1.1",
+    "jsc-android": "^241213.1.0",
     "mobx": "^5.15.4",
     "mobx-react": "^6.2.2",
     "react": "16.11.0",

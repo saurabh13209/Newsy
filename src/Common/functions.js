@@ -5,6 +5,25 @@ import { BookmarkSchema, FollowSchema, LikedSchema, UnlikedSchema } from "./Sche
 const realm = new Realm({ schema: [BookmarkSchema, FollowSchema, LikedSchema, UnlikedSchema] });
 
 
+export const getKeyMain = (item) => {
+    var keyMain = item.publishedAt + "" + item.title.split(" ")[0] + item.title.split(" ")[1] + item.title.split(" ")[2]
+    keyMain = keyMain.split(".");
+    keyMain = keyMain.join();
+    keyMain = keyMain.split("#");
+    keyMain = keyMain.join();
+    keyMain = keyMain.split("$");
+    keyMain = keyMain.join();
+    keyMain = keyMain.split("[");
+    keyMain = keyMain.join();
+    keyMain = keyMain.split("'");
+    keyMain = keyMain.join();
+    keyMain = keyMain.split("]");
+    keyMain = keyMain.join();
+    keyMain = keyMain.split("\"");
+    keyMain = keyMain.join();
+    return keyMain
+}
+
 // FOLLOW DATABASE
 export const getFollowData = () => {
     NewsStore.followingPages = []
@@ -94,7 +113,7 @@ export const addLike = (title) => {
             title: title
         })
     })
-    setLikeDislike();
+    setLikeDislike(title, 1);
 }
 
 export const addDislike = (title) => {
@@ -103,35 +122,48 @@ export const addDislike = (title) => {
             title: title
         })
     })
-    setLikeDislike();
+    setLikeDislike(title, 0);
 }
 
-export const setLikeDislike = () => {
-    var temp = [];
-    var liked = [];
-    var disliked = [];
+export const getLikedItems = () => {
+    var array = [];
     realm.objects("Liked").forEach(val => {
-        liked.push(val.title)
+        array.push(val.title);
     })
+    return array
+}
+
+export const getDislikedItems = () => {
+    var array = [];
     realm.objects("Unliked").forEach(val => {
-        disliked.push(val.title)
+        array.push(val.title);
     })
+    return array
+}
+
+export const setLikeDislike = (title, task) => {
+    console.log(title);
+    console.log(task);
+    var temp = [];
 
     NewsStore.homeData.forEach((data, i) => {
-        if (disliked.includes(data["title"] + data["publishedAt"])) {
-            var x = data;
-            x["Dislike"] += 1;
-            temp = [
-                ...temp,
-                x
-            ]
-        } else if (liked.includes(data["title"] + data["publishedAt"])) {
-            var x = data;
-            x["Like"] += 1;
-            temp = [
-                ...temp,
-                x
-            ]
+        var keyMain = getKeyMain(data);
+        if (keyMain == title) {
+            if (task == 1) {
+                var x = data;
+                x["Like"] += 1;
+                temp = [
+                    ...temp,
+                    x
+                ]
+            } else {
+                var x = data;
+                x["Dislike"] += 1;
+                temp = [
+                    ...temp,
+                    x
+                ]
+            }
         } else {
             temp = [
                 ...temp,

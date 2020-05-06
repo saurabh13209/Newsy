@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity, Linking, ActivityIndicator } from 'react-native';
+import { View, Text, Image, TouchableOpacity, Linking, ActivityIndicator, ToastAndroid } from 'react-native';
 import * as RNLocalize from "react-native-localize";
 import Axios from 'axios';
 import NewsStore from '../../Store/NewsStore';
@@ -9,34 +9,27 @@ import { fontCustomSize } from '../../Common/fontCustomSize';
 import AntIcons from 'react-native-vector-icons/AntDesign';
 import FontIcons from 'react-native-vector-icons/FontAwesome';
 import database from '@react-native-firebase/database';
-import { addDislike, addLike, setFollowData, getFollowData, getBookmarkData, setBookmarkData } from '../../Common/functions';
+import {
+    addDislike, addLike, setFollowData, getDislikedItems,
+    getFollowData, getBookmarkData, setBookmarkData, getKeyMain, getLikedItems
+} from '../../Common/functions';
 
 
 export default HomeScreen = ({ navigation }) => {
     const [isLoading, setLoading] = useState(true);
+    const [likedArray, setLikedArray] = useState([]);
+    const [dislikedArray, setDislikedArray] = useState([]);
 
     useEffect(() => {
         setLoading(true);
         getFollowData();
         getBookmarkData();
+        setLikedArray(getLikedItems());
+        setDislikedArray(getDislikedItems());
         NewsStore.homeData = []
         Axios.get("https://newsapi.org/v2/top-headlines?country=" + RNLocalize.getCountry().toLowerCase() + "&apiKey=2719918152a7463492d900316ee90bf1").then(res => {
-            res.data.articles.forEach((newsEach, index) => {
-                var keyMain = newsEach.publishedAt + newsEach.title.split(" ")[0] + newsEach.title.split(" ")[1] + newsEach.title.split(" ")[2];
-                keyMain = keyMain.split(".");
-                keyMain = keyMain.join();
-                keyMain = keyMain.split("#");
-                keyMain = keyMain.join();
-                keyMain = keyMain.split("$");
-                keyMain = keyMain.join();
-                keyMain = keyMain.split("[");
-                keyMain = keyMain.join();
-                keyMain = keyMain.split("'");
-                keyMain = keyMain.join();
-                keyMain = keyMain.split("]");
-                keyMain = keyMain.join();
-                keyMain = keyMain.split("\"");
-                keyMain = keyMain.join();
+            res.data.articles.forEach(newsEach => {
+                var keyMain = getKeyMain(newsEach);
                 database().ref("News/" + keyMain + "/").once("value", (resData => {
                     if (resData.val() == null) {
                         database().ref("News/" + keyMain + "/").set({
@@ -102,38 +95,39 @@ export default HomeScreen = ({ navigation }) => {
                                             }}
                                         ><Text style={{ padding: fontCustomSize(10), paddingTop: fontCustomSize(5), fontFamily: "Medium", color: 'black' }}>{item.author}</Text></TouchableOpacity>}
                                         {item.urlToImage == "" ? null : item.urlToImage == undefined ? null : <Image source={{ uri: item.urlToImage }} style={{ height: fontCustomSize(160), resizeMode: "cover" }} />}
-                                        <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', padding: fontCustomSize(10), paddingBottom: 0 }}>
+                                        <View style={{ flexDirection: 'row', padding: fontCustomSize(10), paddingBottom: 0 }}>
                                             <View style={{ flex: 1, flexDirection: 'row' }}>
-                                                <View style={{ flex: 1 }}>
+                                                <View >
                                                     <TouchableOpacity
                                                         onPress={() => {
-                                                            if (item.Like == 0) {
-                                                                addLike(item.title + item.publishedAt);
-                                                                var keyMain = item.publishedAt + item.title.split(" ")[0] + item.title.split(" ")[1] + item.title.split(" ")[2]
+                                                            if (!likedArray.includes(getKeyMain(item))) {
+                                                                var keyMain = getKeyMain(item);
+                                                                addLike(keyMain);
+                                                                setLikedArray(getLikedItems());
                                                                 database().ref("News/" + keyMain + "/Like").once("value", (likeValue => {
-                                                                    database().ref("News/" + keyMain + "/").update({ "Like": parseInt(likeValue.val()) + 1 })
-                                                                }))
+                                                                    database().ref("News/" + keyMain + "/").update({ "Like": parseInt(likeValue.val()) + 1 }).catch(err => console.log(err))
+                                                                })).catch(err => console.log(err))
                                                             } else {
-                                                                console.log("un dislike");
+                                                                ToastAndroid.show("Already liked", ToastAndroid.LONG);
                                                             }
                                                         }}
                                                         style={{ flexDirection: 'row', flexDirection: 'row', }}>
-                                                        <Observer>{() => (<AntIcons name={item["Like"] == 1 ? "like1" : "like2"} size={fontCustomSize(16)} color="black" />)}</Observer>
+                                                        <Observer>{() => (<AntIcons name={likedArray.includes(getKeyMain(item)) ? "like1" : "like2"} size={fontCustomSize(16)} color="black" />)}</Observer>
                                                         <Text style={{ marginLeft: fontCustomSize(5), fontSize: fontCustomSize(14), fontFamily: "Bold" }}>{item.Like}</Text>
                                                     </TouchableOpacity>
                                                 </View>
-
-                                                <View style={{ flex: 1 }}>
+                                                <View style={{ marginLeft: fontCustomSize(20) }}>
                                                     <TouchableOpacity
                                                         onPress={() => {
-                                                            if (item.Dislike == 0) {
-                                                                addDislike(item.title + item.publishedAt);
-                                                                var keyMain = item.publishedAt + item.title.split(" ")[0] + item.title.split(" ")[1] + item.title.split(" ")[2]
+                                                            if (!dislikedArray.includes(getKeyMain(item))) {
+                                                                var keyMain = getKeyMain(item);
+                                                                addDislike(keyMain);
+                                                                setDislikedArray(getDislikedItems());
                                                                 database().ref("News/" + keyMain + "/Dislike").once("value", (likeValue => {
                                                                     database().ref("News/" + keyMain + "/").update({ "Dislike": parseInt(likeValue.val()) + 1 })
                                                                 }))
                                                             } else {
-                                                                console.log("un dislike");
+                                                                ToastAndroid.show("Already disliked", ToastAndroid.LONG);
                                                             }
                                                         }}
                                                         style={{ flexDirection: 'row', flexDirection: 'row', }}>
@@ -142,16 +136,7 @@ export default HomeScreen = ({ navigation }) => {
                                                     </TouchableOpacity>
                                                 </View>
                                             </View>
-                                            <View style={{ flexDirection: 'row', justifyContent: 'flex-end', flex: 1 }}>
-                                                <TouchableOpacity
-                                                    onPress={() => {
-                                                        navigation.navigate("MemesScreen");
-                                                    }}
-                                                    style={{ flexDirection: 'row', flexDirection: 'row', }}>
-                                                    <AntIcons name="arrowsalt" size={fontCustomSize(16)} color="black" />
-                                                    <Text style={{ marginLeft: fontCustomSize(7), fontSize: fontCustomSize(14), fontFamily: "Bold" }}>Related</Text>
-                                                </TouchableOpacity>
-                                            </View>
+
                                         </View>
                                         <View style={{ flexDirection: 'column', padding: fontCustomSize(10) }}>
                                             <Text style={{ fontSize: fontCustomSize(14), fontFamily: "SemiBold" }}>{item.title}</Text>
@@ -162,7 +147,7 @@ export default HomeScreen = ({ navigation }) => {
                                             <View style={{ flexDirection: "row" }}>
                                                 <TouchableOpacity
                                                     onPress={() => {
-                                                        Linking.openURL(`whatsapp://send?text=` + item.url + "\n\n" + item.title + "\n\nTo read more interesting news download https://play.google.com/store/apps/details?id=com.saurabh.Newsy");
+                                                        Linking.openURL(`whatsapp://send?text=` + item.url + "\n\n" + item.title + "\n\nTo read more such interesting news, download Newsy Application");
                                                     }}
                                                     style={{ flexDirection: 'row', marginRight: fontCustomSize(10) }}>
                                                     <FontIcons name="share" color="#252525" size={fontCustomSize(16)} style={{ marginRight: fontCustomSize(5) }} />
