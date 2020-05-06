@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Image, ActivityIndicator, Linking } from 'react-native';
 import Axios from 'axios';
 import { fontCustomSize } from '../../Common/fontCustomSize';
 import { Observer } from 'mobx-react';
